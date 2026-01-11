@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wrecker Portal</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .page {
+      width: 900px;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: normal;
+    }
+
+    .form-box {
+      width: 360px;
+      margin: 0 auto;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background: #fff;
+      border: 1px solid #000;
+    }
+
+    button {
+      width: 180px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 14px;
+      font-size: 15px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+    <h1>Wrecker Portal</h1>
+
+    <form id="wreckerForm" class="form-box">
+      <select id="make" required>
+        <option value="">Car Make</option>
+        <option value="Mazda">Mazda</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Honda">Honda</option>
+      </select>
+
+      <select id="model" required>
+        <option value="">Car Model</option>
+      </select>
+
+      <input id="year" type="number" placeholder="Year (e.g. 2015)" required />
+      <input id="colour" type="text" placeholder="Colour (optional)" />
+
+      <select id="state" required>
+        <option value="">State</option>
+        <option value="NSW">NSW</option>
+        <option value="VIC">VIC</option>
+        <option value="QLD">QLD</option>
+        <option value="SA">SA</option>
+        <option value="WA">WA</option>
+        <option value="TAS">TAS</option>
+        <option value="ACT">ACT</option>
+        <option value="NT">NT</option>
+      </select>
+
+      <input id="suburb" type="text" placeholder="Suburb (optional)" />
+      <input id="wrecker_name" type="text" placeholder="Wrecker Business Name" required />
+      <input id="contact" type="text" placeholder="Contact (phone or email)" required />
+
+      <button type="submit">Add Listing</button>
+
+      <div id="msg" class="message"></div>
+    </form>
+  </div>
+
+  <script>
+    const API_BASE_URL = "http://localhost:3000";
+
+    const modelsByMake = {
+      Mazda: ["Mazda 3", "CX-5"],
+      Toyota: ["Corolla", "Camry"],
+      Honda: ["Civic", "Accord"]
+    };
+
+    const makeEl = document.getElementById("make");
+    const modelEl = document.getElementById("model");
+    const form = document.getElementById("wreckerForm");
+    const msg = document.getElementById("msg");
+
+    makeEl.addEventListener("change", () => {
+      const make = makeEl.value;
+      modelEl.innerHTML = '<option value="">Car Model</option>';
+      if (!make) return;
+      modelsByMake[make].forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = m;
+        opt.textContent = m;
+        modelEl.appendChild(opt);
+      });
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.style.display = "none";
+
+      const payload = {
+        make: document.getElementById("make").value,
+        model: document.getElementById("model").value,
+        year: document.getElementById("year").value,
+        colour: document.getElementById("colour").value,
+        state: document.getElementById("state").value,
+        suburb: document.getElementById("suburb").value,
+        wrecker_name: document.getElementById("wrecker_name").value,
+        contact: document.getElementById("contact").value
+      };
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/inventory`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          msg.style.display = "block";
+          msg.textContent = data.error || "Something went wrong.";
+          return;
+        }
+
+        msg.style.display = "block";
+        msg.textContent = "✅ Listing added! Users can now search it.";
+
+        form.reset();
+        modelEl.innerHTML = '<option value="">Car Model</option>'; // reset models too
+      } catch (err) {
+        msg.style.display = "block";
+        msg.textContent = "❌ Could not connect to the server. Is backend running?";
+      }
+    });
+  </script>
+</body>
+</html>

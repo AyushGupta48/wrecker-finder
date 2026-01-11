@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Car Parts Finder</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
+      background: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .page {
+      width: 900px;
+      max-width: 92vw;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 30px;
+      font-size: 28px;
+      font-weight: normal;
+    }
+
+    .form-box {
+      width: 320px;
+      margin: 0 auto;
+    }
+
+    select, button {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      font-size: 16px;
+      box-sizing: border-box;
+      background: #fff;
+      border: 1px solid #000;
+    }
+
+    button {
+      width: 140px;   /* smaller submit button like your sketch */
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .results-wrap {
+      margin-top: 40px;
+      display: none;  /* hidden until submit */
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0 auto;
+      table-layout: fixed;
+    }
+
+    th, td {
+      border: 1px solid #000;
+      padding: 10px;
+      text-align: center;
+      font-weight: normal;
+      word-wrap: break-word;
+    }
+
+    .no-results {
+      margin-top: 20px;
+      display: none;
+      font-size: 16px;
+    }
+
+    .loading {
+      margin-top: 10px;
+      display: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <!-- Homepage -->
+    <div id="homeSection">
+      <h1>Homepage</h1>
+
+      <form id="searchForm" class="form-box">
+        <select id="makeSelect" required>
+          <option value="">Car Make</option>
+          <option value="Mazda">Mazda</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Honda">Honda</option>
+        </select>
+
+        <!-- starts empty; filled when make is chosen -->
+        <select id="modelSelect" required>
+          <option value="">Car Model</option>
+        </select>
+
+        <select id="stateSelect" required>
+          <option value="">Location - State</option>
+          <option value="NSW">NSW</option>
+          <option value="VIC">VIC</option>
+          <option value="QLD">QLD</option>
+          <option value="SA">SA</option>
+          <option value="WA">WA</option>
+          <option value="TAS">TAS</option>
+          <option value="ACT">ACT</option>
+          <option value="NT">NT</option>
+        </select>
+
+        <button type="submit">Submit</button>
+
+        <div id="loading" class="loading">Loading...</div>
+      </form>
+    </div>
+
+    <!-- Results -->
+    <div id="resultsSection" class="results-wrap">
+      <h1>Results</h1>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Make</th>
+            <th>Model</th>
+            <th>Year</th>
+            <th>Colour</th>
+            <th>Location</th>
+            <th>Contact</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+
+      <div id="noResults" class="no-results">
+        No results found for that selection.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ✅ Change this if your backend is hosted somewhere else later
+    const API_BASE_URL = "http://localhost:3000";
+
+    // ✅ Models available per Make (keep this simple for MVP)
+    const modelsByMake = {
+      Mazda: ["Mazda 3", "CX-5"],
+      Toyota: ["Corolla", "Camry"],
+      Honda: ["Civic", "Accord"]
+    };
+
+    const form = document.getElementById("searchForm");
+    const makeSelect = document.getElementById("makeSelect");
+    const modelSelect = document.getElementById("modelSelect");
+    const stateSelect = document.getElementById("stateSelect");
+
+    const resultsSection = document.getElementById("resultsSection");
+    const resultsBody = document.getElementById("resultsBody");
+    const noResults = document.getElementById("noResults");
+    const loading = document.getElementById("loading");
+
+    // ✅ Make → Model dependency
+    makeSelect.addEventListener("change", () => {
+      const selectedMake = makeSelect.value;
+
+      // Reset models
+      modelSelect.innerHTML = '<option value="">Car Model</option>';
+
+      if (!selectedMake) return;
+
+      // Add only valid models for that make
+      modelsByMake[selectedMake].forEach(model => {
+        const opt = document.createElement("option");
+        opt.value = model;
+        opt.textContent = model;
+        modelSelect.appendChild(opt);
+      });
+    });
+
+    // ✅ On submit: call backend API and render results
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const selectedMake = makeSelect.value;
+      const selectedModel = modelSelect.value;
+      const selectedState = stateSelect.value;
+
+      // UI reset
+      resultsBody.innerHTML = "";
+      noResults.style.display = "none";
+      resultsSection.style.display = "block";
+      loading.style.display = "block";
+
+      try {
+        const url =
+          `${API_BASE_URL}/search?make=${encodeURIComponent(selectedMake)}&model=${encodeURIComponent(selectedModel)}&state=${encodeURIComponent(selectedState)}`;
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        loading.style.display = "none";
+
+        if (!response.ok) {
+          noResults.style.display = "block";
+          noResults.textContent = data.error || "Something went wrong.";
+          return;
+        }
+
+        if (!data.results || data.results.length === 0) {
+          noResults.style.display = "block";
+          noResults.textContent = "No results found for that selection.";
+          return;
+        }
+
+        // Render rows
+        for (const row of data.results) {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.make ?? ""}</td>
+            <td>${row.model ?? ""}</td>
+            <td>${row.year ?? ""}</td>
+            <td>${row.colour ?? ""}</td>
+            <td>${row.location ?? ""}</td>
+            <td>${row.contact ?? ""}</td>
+          `;
+          resultsBody.appendChild(tr);
+        }
+
+      } catch (err) {
+        loading.style.display = "none";
+        noResults.style.display = "block";
+        noResults.textContent =
+          "Could not connect to the server. Make sure your backend is running (npm start) at http://localhost:3000";
+      }
+    });
+  </script>
+</body>
+</html>
