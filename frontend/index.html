@@ -103,6 +103,18 @@
           <option value="">Car Model</option>
         </select>
 
+        <select id="partSelect" required>
+          <option value="">Part Type</option>
+          <option value="Door">Door</option>
+          <option value="Mirror">Mirror</option>
+          <option value="Bumper">Bumper</option>
+          <option value="Headlight">Headlight</option>
+          <option value="Taillight">Taillight</option>
+          <option value="Bonnet">Bonnet</option>
+          <option value="Boot Lid">Boot Lid</option>
+        </select>
+        
+
         <select id="stateSelect" required>
           <option value="">Location - State</option>
           <option value="NSW">NSW</option>
@@ -161,6 +173,8 @@
     const makeSelect = document.getElementById("makeSelect");
     const modelSelect = document.getElementById("modelSelect");
     const stateSelect = document.getElementById("stateSelect");
+    const partSelect = document.getElementById("partSelect");
+
 
     const resultsSection = document.getElementById("resultsSection");
     const resultsBody = document.getElementById("resultsBody");
@@ -192,6 +206,7 @@
       const selectedMake = makeSelect.value;
       const selectedModel = modelSelect.value;
       const selectedState = stateSelect.value;
+      const selectedPart = partSelect.value;
 
       // UI reset
       resultsBody.innerHTML = "";
@@ -201,7 +216,7 @@
 
       try {
         const url =
-          `${API_BASE_URL}/search?make=${encodeURIComponent(selectedMake)}&model=${encodeURIComponent(selectedModel)}&state=${encodeURIComponent(selectedState)}`;
+        `${API_BASE_URL}/search?make=${encodeURIComponent(selectedMake)}&model=${encodeURIComponent(selectedModel)}&state=${encodeURIComponent(selectedState)}&part_type=${encodeURIComponent(selectedPart)}`;
 
         const response = await fetch(url);
         const data = await response.json();

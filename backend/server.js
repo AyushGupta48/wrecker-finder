@@ -18,83 +18,97 @@ const supabase = createClient(
 app.get("/", (req, res) => res.json({ ok: true }));
 
 // Search: /search?make=Mazda&model=Mazda%203&state=NSW
+// Search: /search?make=Mazda&model=Mazda%203&state=NSW&part_type=Door
 app.get("/search", async (req, res) => {
-  const { make, model, state } = req.query;
+  try {
+    const { make, model, state, part_type } = req.query;
 
-  if (!make || !model || !state) {
-    return res.status(400).json({ error: "Please provide make, model, and state." });
+    if (!make || !model || !state || !part_type) {
+      return res.status(400).json({
+        error: "Please provide make, model, state, and part_type."
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("inventory")
+      .select("make, model, year, colour, state, suburb, wrecker_name, contact, part_type")
+      .eq("make", make)
+      .eq("model", model)
+      .eq("state", state)
+      .eq("part_type", part_type)
+      .order("year", { ascending: false })
+      .limit(50);
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    const results = (data || []).map(row => ({
+      make: row.make,
+      model: row.model,
+      year: row.year,
+      colour: row.colour || "",
+      location: row.suburb ? `${row.state} - ${row.suburb}` : row.state,
+      contact: `${row.wrecker_name} - ${row.contact}`,
+      part_type: row.part_type
+    }));
+
+    res.json({ results });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-
-  const { data, error } = await supabase
-    .from("inventory")
-    .select("make, model, year, colour, state, suburb, wrecker_name, contact")
-    .eq("make", make)
-    .eq("model", model)
-    .eq("state", state)
-    .order("year", { ascending: false });
-
-  if (error) return res.status(500).json({ error: error.message });
-
-  const results = data.map(row => ({
-    make: row.make,
-    model: row.model,
-    year: row.year,
-    colour: row.colour || "",
-    location: row.suburb ? `${row.state} - ${row.suburb}` : row.state,
-    contact: `${row.wrecker_name} - ${row.contact}`
-  }));
-
-  res.json({ results });
 });
 
+
 // ✅ Add inventory row (used by wreckers form)
+// Add inventory row (used by wreckers form)
 app.post("/inventory", async (req, res) => {
-    try {
-      const {
+  try {
+    const {
+      make,
+      model,
+      year,
+      colour,
+      state,
+      suburb,
+      wrecker_name,
+      contact,
+      part_type
+    } = req.body;
+
+    if (!make || !model || !year || !state || !wrecker_name || !contact || !part_type) {
+      return res.status(400).json({
+        error: "Missing required fields: make, model, year, state, part_type, wrecker_name, contact"
+      });
+    }
+
+    const yearInt = parseInt(year, 10);
+    if (Number.isNaN(yearInt) || yearInt < 1950 || yearInt > 2035) {
+      return res.status(400).json({ error: "Year must be a valid number (e.g., 2015)" });
+    }
+
+    const { data, error } = await supabase
+      .from("inventory")
+      .insert([{
         make,
         model,
-        year,
-        colour,
+        year: yearInt,
+        colour: colour || null,
         state,
-        suburb,
+        suburb: suburb || null,
         wrecker_name,
-        contact
-      } = req.body;
-  
-      // Basic validation (keep it simple)
-      if (!make || !model || !year || !state || !wrecker_name || !contact) {
-        return res.status(400).json({
-          error: "Missing required fields: make, model, year, state, wrecker_name, contact"
-        });
-      }
-  
-      const yearInt = parseInt(year, 10);
-      if (Number.isNaN(yearInt) || yearInt < 1950 || yearInt > 2035) {
-        return res.status(400).json({ error: "Year must be a valid number (e.g., 2015)" });
-      }
-  
-      const { data, error } = await supabase
-        .from("inventory")
-        .insert([{
-          make,
-          model,
-          year: yearInt,
-          colour: colour || null,
-          state,
-          suburb: suburb || null,
-          wrecker_name,
-          contact
-        }])
-        .select("id, make, model, year, colour, state, suburb, wrecker_name, contact")
-        .single();
-  
-      if (error) return res.status(500).json({ error: error.message });
-  
-      res.status(201).json({ ok: true, created: data });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  });
+        contact,
+        part_type
+      }])
+      .select("id, make, model, year, colour, state, suburb, wrecker_name, contact, part_type")
+      .single();
+
+    if (error) return res.status(500).json({ error: error.message });
+
+    res.status(201).json({ ok: true, created: data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
   
 
 app.listen(3000, () => console.log("API running on http://localhost:3000"));

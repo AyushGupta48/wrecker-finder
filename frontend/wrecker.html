@@ -73,6 +73,18 @@
         <option value="">Car Model</option>
       </select>
 
+      <select id="part_type" required>
+        <option value="">Part Type</option>
+        <option value="Door">Door</option>
+        <option value="Mirror">Mirror</option>
+        <option value="Bumper">Bumper</option>
+        <option value="Headlight">Headlight</option>
+        <option value="Taillight">Taillight</option>
+        <option value="Bonnet">Bonnet</option>
+        <option value="Boot Lid">Boot Lid</option>
+      </select>
+      
+
       <input id="year" type="number" placeholder="Year (e.g. 2015)" required />
       <input id="colour" type="text" placeholder="Colour (optional)" />
 
@@ -131,6 +143,7 @@
       const payload = {
         make: document.getElementById("make").value,
         model: document.getElementById("model").value,
+        part_type: document.getElementById("part_type").value,
         year: document.getElementById("year").value,
         colour: document.getElementById("colour").value,
         state: document.getElementById("state").value,
