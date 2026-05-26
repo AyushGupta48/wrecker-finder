@@ -3,259 +3,543 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Car Parts Finder</title>
+  <title>PartsFinder — Find Car Parts From Wreckers</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      margin: 0;
-      background: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2ee;
+      --accent: #e8431a;
+      --mid: #888;
+      --border: #d0cbc4;
+      --card-bg: #faf8f5;
     }
 
-    .page {
-      width: 900px;
-      max-width: 92vw;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 2px solid var(--black);
+      background: var(--white);
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--black);
+    }
+
+    .logo span { color: var(--accent); }
+
+    header nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      border: 2px solid var(--black);
+      padding: 8px 18px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    header nav a:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 80px 40px 60px;
+      max-width: 860px;
+      margin: 0 auto;
       text-align: center;
     }
 
-    h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      font-weight: normal;
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
     }
 
-    .form-box {
-      width: 320px;
+    .hero h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(48px, 8vw, 86px);
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      margin-bottom: 22px;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: #555;
+      max-width: 480px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+
+    /* ── Search Form ── */
+    .search-card {
+      background: var(--black);
+      border-radius: 2px;
+      padding: 36px 40px 40px;
+      max-width: 700px;
       margin: 0 auto;
     }
 
-    select, button {
+    .search-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .search-grid select {
       width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      font-size: 16px;
-      box-sizing: border-box;
-      background: #fff;
-      border: 1px solid #000;
-    }
-
-    button {
-      width: 140px;   /* smaller submit button like your sketch */
-      padding: 10px;
+      padding: 14px 16px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      background: #1a1a1a;
+      color: var(--white);
+      border: 1px solid #333;
+      border-radius: 2px;
+      appearance: none;
       cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
     }
 
-    .results-wrap {
-      margin-top: 40px;
-      display: none;  /* hidden until submit */
+    .search-grid select:focus { border-color: var(--accent); }
+
+    .search-grid option { background: #1a1a1a; }
+
+    .search-btn {
+      width: 100%;
+      padding: 16px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .search-btn:hover { background: #c93615; }
+    .search-btn:active { transform: scale(0.99); }
+
+    .search-btn:disabled {
+      background: #444;
+      cursor: not-allowed;
+    }
+
+    /* ── Results ── */
+    .results-section {
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 0 40px;
+      display: none;
+    }
+
+    .results-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--black);
+    }
+
+    .results-header h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .result-count {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--mid);
+      letter-spacing: 0.5px;
+    }
+
+    /* Table */
+    .results-table-wrap {
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 0 auto;
-      table-layout: fixed;
     }
 
-    th, td {
-      border: 1px solid #000;
-      padding: 10px;
-      text-align: center;
-      font-weight: normal;
-      word-wrap: break-word;
+    thead tr {
+      background: var(--black);
     }
 
-    .no-results {
-      margin-top: 20px;
-      display: none;
-      font-size: 16px;
+    thead th {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--white);
+      padding: 14px 16px;
+      text-align: left;
     }
 
-    .loading {
-      margin-top: 10px;
-      display: none;
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+
+    tbody tr:hover { background: #eeeae4; }
+
+    tbody td {
+      padding: 14px 16px;
+      font-size: 15px;
+      vertical-align: middle;
+    }
+
+    .contact-link {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
       font-size: 14px;
+      letter-spacing: 0.5px;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1.5px solid var(--accent);
+      padding: 5px 12px;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .contact-link:hover {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    .colour-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .colour-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 1px solid rgba(0,0,0,0.15);
+      flex-shrink: 0;
+    }
+
+    /* States */
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      border: 2px dashed var(--border);
+      border-radius: 2px;
+      display: none;
+    }
+
+    .no-results .icon { font-size: 40px; margin-bottom: 12px; }
+    .no-results p { color: var(--mid); font-size: 16px; }
+
+    .loading-state {
+      text-align: center;
+      padding: 60px 20px;
+      display: none;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 16px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 2px solid var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: var(--mid);
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header { padding: 14px 20px; }
+      .hero { padding: 50px 20px 40px; }
+      .search-card { padding: 24px 20px 28px; }
+      .search-grid { grid-template-columns: 1fr; }
+      .results-section { padding: 0 20px; }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
 
-    <!-- Homepage -->
-    <div id="homeSection">
-      <h1>Homepage</h1>
+  <header>
+    <a class="logo" href="index.html">Parts<span>Finder</span></a>
+    <nav>
+      <a href="wrecker.html">Wrecker Portal →</a>
+    </nav>
+  </header>
 
-      <form id="searchForm" class="form-box">
-        <select id="makeSelect" required>
-          <option value="">Car Make</option>
-          <option value="Mazda">Mazda</option>
-          <option value="Toyota">Toyota</option>
-          <option value="Honda">Honda</option>
-        </select>
+  <main>
+    <section class="hero">
+      <p class="hero-eyebrow">Australia's Car Wreckers Marketplace</p>
+      <h1>Find the Part.<br>Skip the Calls.</h1>
+      <p>Search real-time inventory from wreckers across Australia. No more ringing around.</p>
 
-        <!-- starts empty; filled when make is chosen -->
-        <select id="modelSelect" required>
-          <option value="">Car Model</option>
-        </select>
+      <div class="search-card">
+        <div class="search-grid">
+          <select id="makeSelect">
+            <option value="">— Car Make —</option>
+            <option value="Mazda">Mazda</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Honda">Honda</option>
+          </select>
 
-        <select id="partSelect" required>
-          <option value="">Part Type</option>
-          <option value="Door">Door</option>
-          <option value="Mirror">Mirror</option>
-          <option value="Bumper">Bumper</option>
-          <option value="Headlight">Headlight</option>
-          <option value="Taillight">Taillight</option>
-          <option value="Bonnet">Bonnet</option>
-          <option value="Boot Lid">Boot Lid</option>
-        </select>
-        
+          <select id="modelSelect">
+            <option value="">— Car Model —</option>
+          </select>
 
-        <select id="stateSelect" required>
-          <option value="">Location - State</option>
-          <option value="NSW">NSW</option>
-          <option value="VIC">VIC</option>
-          <option value="QLD">QLD</option>
-          <option value="SA">SA</option>
-          <option value="WA">WA</option>
-          <option value="TAS">TAS</option>
-          <option value="ACT">ACT</option>
-          <option value="NT">NT</option>
-        </select>
+          <select id="partSelect">
+            <option value="">— Part Type —</option>
+            <option value="Door">Door</option>
+            <option value="Mirror">Mirror</option>
+            <option value="Bumper">Bumper</option>
+            <option value="Headlight">Headlight</option>
+            <option value="Taillight">Taillight</option>
+            <option value="Bonnet">Bonnet</option>
+            <option value="Boot Lid">Boot Lid</option>
+          </select>
 
-        <button type="submit">Submit</button>
+          <select id="stateSelect">
+            <option value="">— State —</option>
+            <option value="NSW">NSW</option>
+            <option value="VIC">VIC</option>
+            <option value="QLD">QLD</option>
+            <option value="SA">SA</option>
+            <option value="WA">WA</option>
+            <option value="TAS">TAS</option>
+            <option value="ACT">ACT</option>
+            <option value="NT">NT</option>
+          </select>
+        </div>
 
-        <div id="loading" class="loading">Loading...</div>
-      </form>
-    </div>
+        <button class="search-btn" id="searchBtn" onclick="doSearch()">
+          Search Parts
+        </button>
+      </div>
+    </section>
 
     <!-- Results -->
-    <div id="resultsSection" class="results-wrap">
-      <h1>Results</h1>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Make</th>
-            <th>Model</th>
-            <th>Year</th>
-            <th>Colour</th>
-            <th>Location</th>
-            <th>Contact</th>
-          </tr>
-        </thead>
-        <tbody id="resultsBody"></tbody>
-      </table>
-
-      <div id="noResults" class="no-results">
-        No results found for that selection.
+    <section class="results-section" id="resultsSection">
+      <div class="results-header">
+        <h2>Results</h2>
+        <span class="result-count" id="resultCount"></span>
       </div>
-    </div>
 
-  </div>
+      <div class="loading-state" id="loadingState">
+        <div class="spinner"></div>
+        <p>Searching inventory...</p>
+      </div>
+
+      <div class="no-results" id="noResults">
+        <div class="icon">🔍</div>
+        <p id="noResultsMsg">No listings matched your search. Try broadening your filters.</p>
+      </div>
+
+      <div class="results-table-wrap" id="tableWrap" style="display:none">
+        <table>
+          <thead>
+            <tr>
+              <th>Make</th>
+              <th>Model</th>
+              <th>Part</th>
+              <th>Year</th>
+              <th>Colour</th>
+              <th>Location</th>
+              <th>Wrecker</th>
+              <th>Contact</th>
+            </tr>
+          </thead>
+          <tbody id="resultsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
+  </footer>
+
+  <!-- Supabase JS (CDN) -->
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    // ✅ Change this if your backend is hosted somewhere else later
-    const API_BASE_URL = "http://localhost:3000";
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    // ✅ Models available per Make (keep this simple for MVP)
     const modelsByMake = {
-      Mazda: ["Mazda 3", "CX-5"],
-      Toyota: ["Corolla", "Camry"],
-      Honda: ["Civic", "Accord"]
+      Mazda:  ["Mazda 3", "Mazda 6", "CX-3"],
+      Toyota: ["Corolla", "Yaris"],
+      Honda:  ["Civic", "HR-V"]
     };
 
-    const form = document.getElementById("searchForm");
-    const makeSelect = document.getElementById("makeSelect");
+    const makeSelect  = document.getElementById("makeSelect");
     const modelSelect = document.getElementById("modelSelect");
-    const stateSelect = document.getElementById("stateSelect");
-    const partSelect = document.getElementById("partSelect");
 
-
-    const resultsSection = document.getElementById("resultsSection");
-    const resultsBody = document.getElementById("resultsBody");
-    const noResults = document.getElementById("noResults");
-    const loading = document.getElementById("loading");
-
-    // ✅ Make → Model dependency
+    // Populate models when make changes
     makeSelect.addEventListener("change", () => {
-      const selectedMake = makeSelect.value;
-
-      // Reset models
-      modelSelect.innerHTML = '<option value="">Car Model</option>';
-
-      if (!selectedMake) return;
-
-      // Add only valid models for that make
-      modelsByMake[selectedMake].forEach(model => {
+      const make = makeSelect.value;
+      modelSelect.innerHTML = '<option value="">— Car Model —</option>';
+      if (!make) return;
+      modelsByMake[make].forEach(m => {
         const opt = document.createElement("option");
-        opt.value = model;
-        opt.textContent = model;
+        opt.value = m;
+        opt.textContent = m;
         modelSelect.appendChild(opt);
       });
     });
 
-    // ✅ On submit: call backend API and render results
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    // Colour → approximate CSS colour (best-effort)
+    const colourMap = {
+      white: "#fff", black: "#111", silver: "#c0c0c0", grey: "#888",
+      gray: "#888", red: "#d32f2f", blue: "#1565c0", green: "#2e7d32",
+      yellow: "#f9a825", orange: "#e65100", brown: "#5d4037",
+      gold: "#c6a819", purple: "#6a1b9a", pink: "#e91e8c",
+      cream: "#f5e6c8", champagne: "#f7e7ce", beige: "#f0e4c8"
+    };
 
-      const selectedMake = makeSelect.value;
-      const selectedModel = modelSelect.value;
-      const selectedState = stateSelect.value;
-      const selectedPart = partSelect.value;
-
-      // UI reset
-      resultsBody.innerHTML = "";
-      noResults.style.display = "none";
-      resultsSection.style.display = "block";
-      loading.style.display = "block";
-
-      try {
-        const url =
-        `${API_BASE_URL}/search?make=${encodeURIComponent(selectedMake)}&model=${encodeURIComponent(selectedModel)}&state=${encodeURIComponent(selectedState)}&part_type=${encodeURIComponent(selectedPart)}`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-
-        loading.style.display = "none";
-
-        if (!response.ok) {
-          noResults.style.display = "block";
-          noResults.textContent = data.error || "Something went wrong.";
-          return;
-        }
-
-        if (!data.results || data.results.length === 0) {
-          noResults.style.display = "block";
-          noResults.textContent = "No results found for that selection.";
-          return;
-        }
-
-        // Render rows
-        for (const row of data.results) {
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${row.make ?? ""}</td>
-            <td>${row.model ?? ""}</td>
-            <td>${row.year ?? ""}</td>
-            <td>${row.colour ?? ""}</td>
-            <td>${row.location ?? ""}</td>
-            <td>${row.contact ?? ""}</td>
-          `;
-          resultsBody.appendChild(tr);
-        }
-
-      } catch (err) {
-        loading.style.display = "none";
-        noResults.style.display = "block";
-        noResults.textContent =
-          "Could not connect to the server. Make sure your backend is running (npm start) at http://localhost:3000";
+    function cssColour(colourStr) {
+      if (!colourStr) return null;
+      const key = colourStr.toLowerCase().trim();
+      for (const [k, v] of Object.entries(colourMap)) {
+        if (key.includes(k)) return v;
       }
-    });
+      return "#ccc";
+    }
+
+    async function doSearch() {
+      const make  = document.getElementById("makeSelect").value;
+      const model = document.getElementById("modelSelect").value;
+      const part  = document.getElementById("partSelect").value;
+      const state = document.getElementById("stateSelect").value;
+
+      // Show results section
+      const section    = document.getElementById("resultsSection");
+      const loadingEl  = document.getElementById("loadingState");
+      const noResultsEl= document.getElementById("noResults");
+      const tableWrap  = document.getElementById("tableWrap");
+      const body       = document.getElementById("resultsBody");
+      const countEl    = document.getElementById("resultCount");
+
+      section.style.display = "block";
+      loadingEl.style.display = "block";
+      noResultsEl.style.display = "none";
+      tableWrap.style.display = "none";
+      body.innerHTML = "";
+      countEl.textContent = "";
+
+      // Build Supabase query — only filter on fields that were selected
+      let query = db.from("inventory").select("*");
+      if (make)  query = query.eq("make", make);
+      if (model) query = query.eq("model", model);
+      if (part)  query = query.eq("part_type", part);
+      if (state) query = query.eq("state", state);
+      query = query.order("created_at", { ascending: false });
+
+      const { data, error } = await query;
+      loadingEl.style.display = "none";
+
+      if (error) {
+        noResultsEl.style.display = "block";
+        document.getElementById("noResultsMsg").textContent =
+          "Something went wrong. Check your Supabase credentials.";
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        noResultsEl.style.display = "block";
+        document.getElementById("noResultsMsg").textContent =
+          "No listings matched your search. Try broadening your filters.";
+        return;
+      }
+
+      countEl.textContent = `${data.length} listing${data.length !== 1 ? "s" : ""} found`;
+      tableWrap.style.display = "block";
+
+      data.forEach(row => {
+        const dot = row.colour ? cssColour(row.colour) : null;
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${row.make ?? "—"}</td>
+          <td>${row.model ?? "—"}</td>
+          <td>${row.part_type ?? "—"}</td>
+          <td>${row.year ?? "—"}</td>
+          <td>
+            ${dot ? `<span class="colour-chip">
+              <span class="colour-dot" style="background:${dot}"></span>
+              ${row.colour}
+            </span>` : (row.colour || "—")}
+          </td>
+          <td>${row.suburb ? row.suburb + ", " : ""}${row.state ?? "—"}</td>
+          <td>${row.wrecker_name ?? "—"}</td>
+          <td><a class="contact-link" href="${formatContact(row.contact)}">${row.contact ?? "—"}</a></td>
+        `;
+        body.appendChild(tr);
+      });
+
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function formatContact(contact) {
+      if (!contact) return "#";
+      if (contact.includes("@")) return `mailto:${contact}`;
+      if (/^\d/.test(contact.replace(/\s/g, ""))) return `tel:${contact.replace(/\s/g, "")}`;
+      return "#";
+    }
   </script>
 </body>
 </html>

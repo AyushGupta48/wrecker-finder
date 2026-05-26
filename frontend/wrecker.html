@@ -3,130 +3,379 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Wrecker Portal</title>
+  <title>PartsFinder — Wrecker Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2ee;
+      --accent: #e8431a;
+      --mid: #888;
+      --border: #d0cbc4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      margin: 0;
-      background: #fff;
+      font-family: 'Barlow', sans-serif;
+      background: var(--white);
+      color: var(--black);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: space-between;
+      padding: 18px 40px;
+      border-bottom: 2px solid var(--black);
+      background: var(--white);
     }
 
-    .page {
-      width: 900px;
-      max-width: 92vw;
-      text-align: center;
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--black);
     }
 
-    h1 {
-      margin-bottom: 30px;
-      font-size: 28px;
-      font-weight: normal;
-    }
+    .logo span { color: var(--accent); }
 
-    .form-box {
-      width: 360px;
-      margin: 0 auto;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 12px;
-      font-size: 16px;
-      box-sizing: border-box;
-      background: #fff;
-      border: 1px solid #000;
-    }
-
-    button {
-      width: 180px;
-      padding: 10px;
-      cursor: pointer;
-    }
-
-    .message {
-      margin-top: 14px;
+    header nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 600;
       font-size: 15px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--black);
+      border: 2px solid var(--black);
+      padding: 8px 18px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    header nav a:hover {
+      background: var(--black);
+      color: var(--white);
+    }
+
+    /* ── Page layout ── */
+    .page {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 60px 40px 80px;
+    }
+
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    .page h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(40px, 7vw, 62px);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .page-desc {
+      font-size: 16px;
+      color: #666;
+      line-height: 1.6;
+      margin-bottom: 40px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Form ── */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 13px 14px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      background: #fff;
+      color: var(--black);
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      outline: none;
+      appearance: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--black);
+    }
+
+    input::placeholder { color: #bbb; }
+
+    .optional-tag {
+      font-size: 11px;
+      color: #bbb;
+      font-style: italic;
+      margin-left: 4px;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    /* Submit */
+    .submit-row {
+      grid-column: 1 / -1;
+      margin-top: 8px;
+    }
+
+    .submit-btn {
+      padding: 16px 36px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      width: 100%;
+    }
+
+    .submit-btn:hover { background: #c93615; }
+    .submit-btn:active { transform: scale(0.99); }
+    .submit-btn:disabled { background: #ccc; cursor: not-allowed; }
+
+    /* Messages */
+    .msg {
+      grid-column: 1 / -1;
+      padding: 16px 20px;
+      border-radius: 2px;
+      font-size: 15px;
+      font-weight: 500;
       display: none;
+      margin-top: 4px;
+    }
+
+    .msg.success {
+      background: #e8f5e9;
+      border: 1.5px solid #4caf50;
+      color: #1b5e20;
+    }
+
+    .msg.error {
+      background: #fce4ec;
+      border: 1.5px solid #e91e63;
+      color: #880e4f;
+    }
+
+    /* Info box */
+    .info-box {
+      background: #fff8f6;
+      border: 1.5px solid #f5c4b8;
+      border-radius: 2px;
+      padding: 18px 20px;
+      margin-bottom: 32px;
+      font-size: 14px;
+      color: #5a2d22;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 2px solid var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: var(--mid);
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 14px 20px; }
+      .page { padding: 40px 20px 60px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
     }
   </style>
 </head>
 
 <body>
-  <div class="page">
-    <h1>Wrecker Portal</h1>
 
-    <form id="wreckerForm" class="form-box">
-      <select id="make" required>
-        <option value="">Car Make</option>
-        <option value="Mazda">Mazda</option>
-        <option value="Toyota">Toyota</option>
-        <option value="Honda">Honda</option>
-      </select>
+  <header>
+    <a class="logo" href="index.html">Parts<span>Finder</span></a>
+    <nav>
+      <a href="index.html">← Find Parts</a>
+    </nav>
+  </header>
 
-      <select id="model" required>
-        <option value="">Car Model</option>
-      </select>
+  <main>
+    <div class="page">
+      <p class="page-eyebrow">For Businesses</p>
+      <h1>Wrecker Portal</h1>
+      <p class="page-desc">
+        Add parts you have in stock and customers can find you directly — no middleman, no listing fees.
+      </p>
 
-      <select id="part_type" required>
-        <option value="">Part Type</option>
-        <option value="Door">Door</option>
-        <option value="Mirror">Mirror</option>
-        <option value="Bumper">Bumper</option>
-        <option value="Headlight">Headlight</option>
-        <option value="Taillight">Taillight</option>
-        <option value="Bonnet">Bonnet</option>
-        <option value="Boot Lid">Boot Lid</option>
-      </select>
-      
+      <div class="info-box">
+        <strong>How it works</strong>
+        Add a listing for each part you have available. Customers searching for that exact part in your state will see your details and contact you directly.
+      </div>
 
-      <input id="year" type="number" placeholder="Year (e.g. 2015)" required />
-      <input id="colour" type="text" placeholder="Colour (optional)" />
+      <div class="form-grid" id="wreckerForm">
 
-      <select id="state" required>
-        <option value="">State</option>
-        <option value="NSW">NSW</option>
-        <option value="VIC">VIC</option>
-        <option value="QLD">QLD</option>
-        <option value="SA">SA</option>
-        <option value="WA">WA</option>
-        <option value="TAS">TAS</option>
-        <option value="ACT">ACT</option>
-        <option value="NT">NT</option>
-      </select>
+        <div class="form-group">
+          <label>Car Make</label>
+          <select id="make" required>
+            <option value="">Select make</option>
+            <option value="Mazda">Mazda</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Honda">Honda</option>
+          </select>
+        </div>
 
-      <input id="suburb" type="text" placeholder="Suburb (optional)" />
-      <input id="wrecker_name" type="text" placeholder="Wrecker Business Name" required />
-      <input id="contact" type="text" placeholder="Contact (phone or email)" required />
+        <div class="form-group">
+          <label>Car Model</label>
+          <select id="model" required>
+            <option value="">Select model</option>
+          </select>
+        </div>
 
-      <button type="submit">Add Listing</button>
+        <div class="form-group">
+          <label>Part Type</label>
+          <select id="part_type" required>
+            <option value="">Select part</option>
+            <option value="Door">Door</option>
+            <option value="Mirror">Mirror</option>
+            <option value="Bumper">Bumper</option>
+            <option value="Headlight">Headlight</option>
+            <option value="Taillight">Taillight</option>
+            <option value="Bonnet">Bonnet</option>
+            <option value="Boot Lid">Boot Lid</option>
+          </select>
+        </div>
 
-      <div id="msg" class="message"></div>
-    </form>
-  </div>
+        <div class="form-group">
+          <label>Year</label>
+          <input id="year" type="number" placeholder="e.g. 2015" min="1980" max="2030" required />
+        </div>
+
+        <div class="form-group">
+          <label>Colour <span class="optional-tag">optional</span></label>
+          <input id="colour" type="text" placeholder="e.g. Silver" />
+        </div>
+
+        <div class="form-group">
+          <label>State</label>
+          <select id="state" required>
+            <option value="">Select state</option>
+            <option value="NSW">NSW</option>
+            <option value="VIC">VIC</option>
+            <option value="QLD">QLD</option>
+            <option value="SA">SA</option>
+            <option value="WA">WA</option>
+            <option value="TAS">TAS</option>
+            <option value="ACT">ACT</option>
+            <option value="NT">NT</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Suburb <span class="optional-tag">optional</span></label>
+          <input id="suburb" type="text" placeholder="e.g. Parramatta" />
+        </div>
+
+        <div class="form-group full">
+          <label>Business Name</label>
+          <input id="wrecker_name" type="text" placeholder="Your wrecker business name" required />
+        </div>
+
+        <div class="form-group full">
+          <label>Contact (phone or email)</label>
+          <input id="contact" type="text" placeholder="e.g. 02 9999 0000 or parts@myyard.com.au" required />
+        </div>
+
+        <div class="submit-row">
+          <button class="submit-btn" id="submitBtn" onclick="submitListing()">
+            Add Listing
+          </button>
+        </div>
+
+        <div class="msg" id="msg"></div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
+  </footer>
+
+  <!-- Supabase JS (CDN) -->
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    const API_BASE_URL = "http://localhost:3000";
+    // ─────────────────────────────────────────────
+    // 🔧 PASTE YOUR SUPABASE CREDENTIALS HERE
+    // ─────────────────────────────────────────────
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
     const modelsByMake = {
-      Mazda: ["Mazda 3", "CX-5"],
-      Toyota: ["Corolla", "Camry"],
-      Honda: ["Civic", "Accord"]
+      Mazda:  ["Mazda 3", "Mazda 6", "CX-3"],
+      Toyota: ["Corolla", "Yaris"],
+      Honda:  ["Civic", "HR-V"]
     };
 
-    const makeEl = document.getElementById("make");
-    const modelEl = document.getElementById("model");
-    const form = document.getElementById("wreckerForm");
-    const msg = document.getElementById("msg");
-
-    makeEl.addEventListener("change", () => {
-      const make = makeEl.value;
-      modelEl.innerHTML = '<option value="">Car Model</option>';
+    document.getElementById("make").addEventListener("change", function() {
+      const make = this.value;
+      const modelEl = document.getElementById("model");
+      modelEl.innerHTML = '<option value="">Select model</option>';
       if (!make) return;
       modelsByMake[make].forEach(m => {
         const opt = document.createElement("option");
@@ -136,47 +385,68 @@
       });
     });
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
+    async function submitListing() {
+      const msg    = document.getElementById("msg");
+      const btn    = document.getElementById("submitBtn");
+
+      const make         = document.getElementById("make").value;
+      const model        = document.getElementById("model").value;
+      const part_type    = document.getElementById("part_type").value;
+      const year         = document.getElementById("year").value;
+      const colour       = document.getElementById("colour").value.trim();
+      const state        = document.getElementById("state").value;
+      const suburb       = document.getElementById("suburb").value.trim();
+      const wrecker_name = document.getElementById("wrecker_name").value.trim();
+      const contact      = document.getElementById("contact").value.trim();
+
+      // Basic validation
+      if (!make || !model || !part_type || !year || !state || !wrecker_name || !contact) {
+        showMsg("Please fill in all required fields.", "error");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Adding...";
       msg.style.display = "none";
 
-      const payload = {
-        make: document.getElementById("make").value,
-        model: document.getElementById("model").value,
-        part_type: document.getElementById("part_type").value,
-        year: document.getElementById("year").value,
-        colour: document.getElementById("colour").value,
-        state: document.getElementById("state").value,
-        suburb: document.getElementById("suburb").value,
-        wrecker_name: document.getElementById("wrecker_name").value,
-        contact: document.getElementById("contact").value
-      };
+      const { error } = await db.from("inventory").insert([{
+        make, model, part_type,
+        year: parseInt(year),
+        colour: colour || null,
+        state,
+        suburb: suburb || null,
+        wrecker_name,
+        contact
+      }]);
 
-      try {
-        const res = await fetch(`${API_BASE_URL}/inventory`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
+      btn.disabled = false;
+      btn.textContent = "Add Listing";
 
-        const data = await res.json();
-
-        if (!res.ok) {
-          msg.style.display = "block";
-          msg.textContent = data.error || "Something went wrong.";
-          return;
-        }
-
-        msg.style.display = "block";
-        msg.textContent = "✅ Listing added! Users can now search it.";
-
-        form.reset();
-        modelEl.innerHTML = '<option value="">Car Model</option>'; // reset models too
-      } catch (err) {
-        msg.style.display = "block";
-        msg.textContent = "❌ Could not connect to the server. Is backend running?";
+      if (error) {
+        showMsg("❌ Could not save listing. Check your Supabase credentials.", "error");
+        console.error(error);
+        return;
       }
-    });
+
+      showMsg("✅ Listing added! Customers searching for this part can now find you.", "success");
+
+      // Reset form
+      ["make","model","part_type","year","colour","state","suburb","wrecker_name","contact"]
+        .forEach(id => {
+          const el = document.getElementById(id);
+          if (el.tagName === "SELECT") el.value = "";
+          else el.value = "";
+        });
+      document.getElementById("model").innerHTML = '<option value="">Select model</option>';
+    }
+
+    function showMsg(text, type) {
+      const el = document.getElementById("msg");
+      el.textContent = text;
+      el.className = `msg ${type}`;
+      el.style.display = "block";
+      el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
   </script>
 </body>
 </html>

@@ -1,2 +1,9 @@
 inventory
 Hf0uHRKSVvTy9X5P
+
+
+QGvF2NW7GVmXndpD
+
+
+    const SUPABASE_URL  = "https://clmhaqdcifxxvqgdmtfd.supabase.co";
+    const SUPABASE_ANON = "QGvF2NW7GVmXndpD";
