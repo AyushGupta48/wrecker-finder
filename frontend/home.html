@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PartsFinder — Australia's Car Parts Marketplace</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2ee;
+      --accent: #e8431a;
+      --accent2: #f5a623;
+      --mid: #888;
+      --border: #d0cbc4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* ── Header ── */
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      color: var(--white);
+    }
+
+    .logo span { color: var(--accent); }
+
+    .header-tag {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 90px 40px 70px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent);
+      border: 1px solid rgba(232,67,26,0.4);
+      padding: 5px 14px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(60px, 11vw, 130px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease 0.1s both;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-sub {
+      font-size: 18px;
+      color: rgba(245,242,238,0.6);
+      max-width: 480px;
+      margin: 0 auto 60px;
+      line-height: 1.7;
+      animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    /* ── Choice cards ── */
+    .choices {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 40px;
+      position: relative;
+      z-index: 10;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+
+    .choice-card {
+      width: 320px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 40px 36px;
+      text-decoration: none;
+      color: var(--white);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .choice-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .choice-card.customer::before {
+      background: linear-gradient(135deg, rgba(232,67,26,0.08) 0%, transparent 60%);
+    }
+
+    .choice-card.wrecker::before {
+      background: linear-gradient(135deg, rgba(245,166,35,0.08) 0%, transparent 60%);
+    }
+
+    .choice-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .choice-card:hover::before { opacity: 1; }
+
+    .card-icon {
+      font-size: 40px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .card-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .choice-card.customer .card-label { color: var(--accent); }
+    .choice-card.wrecker .card-label { color: var(--accent2); }
+
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: rgba(245,242,238,0.55);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border-radius: 2px;
+      transition: gap 0.15s;
+    }
+
+    .choice-card:hover .card-cta { gap: 12px; }
+
+    .choice-card.customer .card-cta {
+      background: var(--accent);
+      color: var(--white);
+    }
+
+    .choice-card.wrecker .card-cta {
+      background: var(--accent2);
+      color: var(--black);
+    }
+
+    /* ── Divider ── */
+    .or-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 10;
+    }
+
+    .or-divider span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: rgba(255,255,255,0.2);
+      text-transform: uppercase;
+      padding: 0 8px;
+    }
+
+    /* ── How it works strip ── */
+    .how-strip {
+      position: relative;
+      z-index: 10;
+      margin: 80px auto 0;
+      max-width: 900px;
+      padding: 0 40px 80px;
+    }
+
+    .strip-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.03);
+      padding: 28px 26px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .step-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 48px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: rgba(245,242,238,0.45);
+      line-height: 1.6;
+    }
+
+    /* ── Footer ── */
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 28px 40px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.2);
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      header { padding: 18px 24px; }
+      .hero { padding: 60px 24px 50px; }
+      .choices { padding: 0 24px; flex-direction: column; align-items: center; }
+      .choice-card { width: 100%; max-width: 360px; }
+      .steps { grid-template-columns: 1fr; }
+      .how-strip { padding: 0 24px 60px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <a class="logo" href="home.html">Parts<span>Finder</span></a>
+    <span class="header-tag">Australia's Wrecker Marketplace</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <span class="hero-eyebrow">🇦🇺 Australia-wide</span>
+      <h1>Find the part.<br><em>Skip the calls.</em></h1>
+      <p class="hero-sub">
+        Real-time car parts from wreckers across Australia. No more ringing around. No middleman.
+      </p>
+    </section>
+
+    <div class="choices">
+
+      <a class="choice-card customer" href="index.html">
+        <span class="card-icon">🔍</span>
+        <div class="card-label">For Car Owners</div>
+        <div class="card-title">Find a Part</div>
+        <p class="card-desc">
+          Search by make, model, part type and state. See which wreckers have it and contact them directly.
+        </p>
+        <span class="card-cta">Search Now →</span>
+      </a>
+
+      <a class="choice-card wrecker" href="wrecker.html">
+        <span class="card-icon">🔧</span>
+        <div class="card-label">For Wreckers</div>
+        <div class="card-title">List a Part</div>
+        <p class="card-desc">
+          Add parts you have in stock. Customers searching for that exact part in your state will find you directly.
+        </p>
+        <span class="card-cta">Add Listing →</span>
+      </a>
+
+    </div>
+
+    <div class="how-strip">
+      <p class="strip-label">How it works</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-title">Search your part</div>
+          <p class="step-desc">Select your car make, model, part type and state. Takes 10 seconds.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-title">See who has it</div>
+          <p class="step-desc">Results show wreckers with that exact part in stock, including colour and year.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-title">Contact directly</div>
+          <p class="step-desc">Call or email the wrecker straight from the listing. No middleman, no fees.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
+  </footer>
+
+</body>
+</html>
