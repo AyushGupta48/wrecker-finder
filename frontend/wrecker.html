@@ -242,6 +242,149 @@
       .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: 1; }
     }
+
+    /* ── My Listings ── */
+    .my-listings {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 40px 80px;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 2px solid var(--black);
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .section-sub {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 28px;
+    }
+
+    .listings-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .listing-card {
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      padding: 18px 18px 14px;
+      position: relative;
+      transition: border-color 0.15s;
+    }
+
+    .listing-card:hover { border-color: #999; }
+
+    .lc-part {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .lc-car {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--mid);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .lc-details {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .lc-details span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-right: 6px;
+    }
+
+    .lc-footer {
+      display: flex;
+      justify-content: flex-end;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+    }
+
+    .delete-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: none;
+      border: 1.5px solid #ddd;
+      color: #999;
+      padding: 6px 14px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .delete-btn:hover {
+      border-color: #e91e63;
+      color: #e91e63;
+      background: #fce4ec;
+    }
+
+    .listings-empty {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px 20px;
+      border: 2px dashed var(--border);
+      border-radius: 2px;
+      color: var(--mid);
+      font-size: 15px;
+    }
+
+    .listings-loading {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 40px;
+      color: var(--mid);
+      font-size: 14px;
+    }
+
+    .spinner {
+      width: 28px;
+      height: 28px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin: 0 auto 12px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .my-listings { padding: 0 20px 60px; }
+      .listings-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 
@@ -249,8 +392,9 @@
 
   <header>
     <a class="logo" href="home.html">Parts<span>Finder</span></a>
-    <nav>
-      <a href="index.html">← Find Parts</a>
+    <nav style="display:flex;gap:10px;align-items:center;">
+      <a href="index.html">Find Parts</a>
+      <a href="#" onclick="logout(); return false;">Log Out</a>
     </nav>
   </header>
 
@@ -350,21 +494,55 @@
 
       </div>
     </div>
+
+    <!-- My Listings -->
+    <div class="my-listings">
+      <hr class="section-divider">
+      <h2 class="section-title">My Listings</h2>
+      <p class="section-sub">All parts you currently have listed. Delete any that are sold or no longer available.</p>
+
+      <div class="listings-grid" id="myListingsGrid">
+        <div class="listings-loading" id="listingsLoading">
+          <div class="spinner"></div>
+          Loading your listings...
+        </div>
+      </div>
+    </div>
   </main>
 
   <footer>
     &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
   </footer>
 
-  <!-- Supabase JS (CDN) -->
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
-    // ─────────────────────────────────────────────
-    // 🔧 PASTE YOUR SUPABASE CREDENTIALS HERE
-    // ─────────────────────────────────────────────
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    let currentUser = null;
+
+    // ── Auth check: must be logged in as a wrecker ──
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      if (!session) { window.location.href = 'login.html'; return; }
+
+      const role = session.user.user_metadata?.role;
+      if (role !== 'wrecker') {
+        alert('This portal is for wreckers only. Redirecting you home.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      currentUser = session.user;
+      loadMyListings();
+    }
+
+    init();
+
+    async function logout() {
+      await db.auth.signOut();
+      window.location.href = 'home.html';
+    }
 
     const modelsByMake = {
       Mazda:  ["Mazda 3", "Mazda 6", "CX-3"],
@@ -386,8 +564,8 @@
     });
 
     async function submitListing() {
-      const msg    = document.getElementById("msg");
-      const btn    = document.getElementById("submitBtn");
+      const msg = document.getElementById("msg");
+      const btn = document.getElementById("submitBtn");
 
       const make         = document.getElementById("make").value;
       const model        = document.getElementById("model").value;
@@ -399,7 +577,6 @@
       const wrecker_name = document.getElementById("wrecker_name").value.trim();
       const contact      = document.getElementById("contact").value.trim();
 
-      // Basic validation
       if (!make || !model || !part_type || !year || !state || !wrecker_name || !contact) {
         showMsg("Please fill in all required fields.", "error");
         return;
@@ -416,27 +593,26 @@
         state,
         suburb: suburb || null,
         wrecker_name,
-        contact
+        contact,
+        user_id: currentUser.id
       }]);
 
       btn.disabled = false;
       btn.textContent = "Add Listing";
 
       if (error) {
-        showMsg("❌ Could not save listing. Check your Supabase credentials.", "error");
+        showMsg("❌ Could not save listing. Please try again.", "error");
         console.error(error);
         return;
       }
 
       showMsg("✅ Listing added! Customers searching for this part can now find you.", "success");
+      // Refresh listings
+      document.getElementById("myListingsGrid").innerHTML = '<div class="listings-loading"><div class="spinner"></div>Refreshing...</div>';
+      loadMyListings();
 
-      // Reset form
       ["make","model","part_type","year","colour","state","suburb","wrecker_name","contact"]
-        .forEach(id => {
-          const el = document.getElementById(id);
-          if (el.tagName === "SELECT") el.value = "";
-          else el.value = "";
-        });
+        .forEach(id => { document.getElementById(id).value = ""; });
       document.getElementById("model").innerHTML = '<option value="">Select model</option>';
     }
 
@@ -446,6 +622,74 @@
       el.className = `msg ${type}`;
       el.style.display = "block";
       el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    // ── Load wrecker's own listings ──
+    async function loadMyListings() {
+      const grid = document.getElementById("myListingsGrid");
+
+      const { data, error } = await db
+        .from("inventory")
+        .select("*")
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
+
+      document.getElementById("listingsLoading").remove();
+
+      if (error || !data || data.length === 0) {
+        grid.innerHTML = '<div class="listings-empty">No listings yet. Add your first one above.</div>';
+        return;
+      }
+
+      data.forEach(row => addListingCard(row));
+    }
+
+    function addListingCard(row) {
+      const grid = document.getElementById("myListingsGrid");
+
+      // Remove empty state if present
+      const empty = grid.querySelector(".listings-empty");
+      if (empty) empty.remove();
+
+      const card = document.createElement("div");
+      card.className = "listing-card";
+      card.id = "card-" + row.id;
+      card.innerHTML = `
+        <div class="lc-part">${row.part_type ?? "—"}</div>
+        <div class="lc-car">${row.year ?? ""} ${row.make ?? ""} ${row.model ?? ""}</div>
+        <div class="lc-details">
+          ${row.colour ? `<div><span>Colour</span>${row.colour}</div>` : ""}
+          <div><span>Location</span>${row.suburb ? row.suburb + ", " : ""}${row.state ?? "—"}</div>
+          <div><span>Contact</span>${row.contact ?? "—"}</div>
+        </div>
+        <div class="lc-footer">
+          <button class="delete-btn" onclick="deleteListing(${row.id}, this)">Delete</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    }
+
+    async function deleteListing(id, btn) {
+      if (!confirm("Delete this listing? This cannot be undone.")) return;
+
+      btn.textContent = "Deleting...";
+      btn.disabled = true;
+
+      const { error } = await db.from("inventory").delete().eq("id", id);
+
+      if (error) {
+        btn.textContent = "Delete";
+        btn.disabled = false;
+        alert("Could not delete. Please try again.");
+        return;
+      }
+
+      document.getElementById("card-" + id).remove();
+
+      const grid = document.getElementById("myListingsGrid");
+      if (grid.children.length === 0) {
+        grid.innerHTML = '<div class="listings-empty">No listings yet. Add your first one above.</div>';
+      }
     }
   </script>
 </body>

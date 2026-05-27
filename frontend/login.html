@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PartsFinder — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f2ee;
+      --accent: #e8431a;
+      --accent2: #f5a623;
+      --mid: #888;
+      --border: #d0cbc4;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Barlow', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    header {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 22px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .logo {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .logo span { color: var(--accent); }
+
+    header a.back {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,0.4);
+      transition: color 0.15s;
+    }
+    header a.back:hover { color: var(--white); }
+
+    /* ── Card ── */
+    .center {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      position: relative;
+      z-index: 10;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.1);
+      border-radius: 4px;
+      padding: 40px 40px 36px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 36px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      margin-bottom: 6px;
+    }
+
+    .card-sub {
+      font-size: 14px;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 28px;
+    }
+
+    .tab {
+      flex: 1;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.35);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 10px 0;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .tab.active {
+      color: var(--white);
+      border-bottom-color: var(--accent);
+    }
+
+    /* ── Form fields ── */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    input {
+      width: 100%;
+      padding: 13px 14px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 15px;
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 2px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    input:focus { border-color: rgba(255,255,255,0.4); }
+    input::placeholder { color: rgba(255,255,255,0.2); }
+
+    /* ── Role selector (signup only) ── */
+    .role-group {
+      margin-bottom: 14px;
+      display: none;
+    }
+
+    .role-group label {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .role-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .role-btn {
+      padding: 14px 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 2px;
+      color: rgba(255,255,255,0.5);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+    }
+
+    .role-btn .role-icon { display: block; font-size: 22px; margin-bottom: 6px; }
+
+    .role-btn.selected {
+      border-color: var(--accent);
+      background: rgba(232,67,26,0.12);
+      color: var(--white);
+    }
+
+    /* ── Submit ── */
+    .submit-btn {
+      width: 100%;
+      padding: 15px;
+      margin-top: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      background: var(--accent);
+      color: var(--white);
+      border: none;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .submit-btn:hover { background: #c93615; }
+    .submit-btn:disabled { background: #444; cursor: not-allowed; }
+
+    /* ── Message ── */
+    .msg {
+      margin-top: 14px;
+      padding: 12px 16px;
+      border-radius: 2px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .msg.error {
+      background: rgba(233,30,99,0.12);
+      border: 1px solid rgba(233,30,99,0.3);
+      color: #f48fb1;
+    }
+
+    .msg.success {
+      background: rgba(76,175,80,0.12);
+      border: 1px solid rgba(76,175,80,0.3);
+      color: #a5d6a7;
+    }
+
+    footer {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 24px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,0.15);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a class="logo" href="home.html">Parts<span>Finder</span></a>
+    <a class="back" href="home.html">← Back to home</a>
+  </header>
+
+  <div class="center">
+    <div class="card">
+      <div class="card-title">Welcome</div>
+      <p class="card-sub">Sign in to your account or create a new one.</p>
+
+      <div class="tabs">
+        <button class="tab active" id="tabLogin" onclick="switchTab('login')">Log In</button>
+        <button class="tab" id="tabSignup" onclick="switchTab('signup')">Sign Up</button>
+      </div>
+
+      <div class="field">
+        <label>Email</label>
+        <input id="email" type="email" placeholder="you@example.com" />
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="password" type="password" placeholder="••••••••" />
+      </div>
+
+      <!-- Role selector — signup only -->
+      <div class="role-group" id="roleGroup">
+        <label>I am a...</label>
+        <div class="role-options">
+          <div class="role-btn" id="roleCustomer" onclick="selectRole('customer')">
+            <span class="role-icon">🔍</span>
+            Customer
+          </div>
+          <div class="role-btn" id="roleWrecker" onclick="selectRole('wrecker')">
+            <span class="role-icon">🔧</span>
+            Wrecker
+          </div>
+        </div>
+      </div>
+
+      <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">Log In</button>
+
+      <div class="msg" id="msg"></div>
+    </div>
+  </div>
+
+  <footer>&copy; 2025 PartsFinder</footer>
+
+  <script src="../config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    let currentTab = 'login';
+    let selectedRole = null;
+
+    // If already logged in, redirect appropriately
+    db.auth.getSession().then(({ data: { session } }) => {
+      if (session) redirectAfterLogin(session.user);
+    });
+
+    function switchTab(tab) {
+      currentTab = tab;
+      selectedRole = null;
+      document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+      document.getElementById('tabSignup').classList.toggle('active', tab === 'signup');
+      document.getElementById('roleGroup').style.display = tab === 'signup' ? 'block' : 'none';
+      document.getElementById('submitBtn').textContent = tab === 'login' ? 'Log In' : 'Create Account';
+      document.getElementById('roleCustomer').classList.remove('selected');
+      document.getElementById('roleWrecker').classList.remove('selected');
+      hideMsg();
+    }
+
+    function selectRole(role) {
+      selectedRole = role;
+      document.getElementById('roleCustomer').classList.toggle('selected', role === 'customer');
+      document.getElementById('roleWrecker').classList.toggle('selected', role === 'wrecker');
+    }
+
+    async function handleSubmit() {
+      const email    = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const btn      = document.getElementById('submitBtn');
+
+      if (!email || !password) { showMsg('Please enter your email and password.', 'error'); return; }
+
+      if (currentTab === 'signup' && !selectedRole) {
+        showMsg('Please select whether you are a customer or wrecker.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Please wait...';
+      hideMsg();
+
+      if (currentTab === 'login') {
+        const { data, error } = await db.auth.signInWithPassword({ email, password });
+        if (error) {
+          showMsg(error.message, 'error');
+          btn.disabled = false;
+          btn.textContent = 'Log In';
+          return;
+        }
+        redirectAfterLogin(data.user);
+
+      } else {
+        const { data, error } = await db.auth.signUp({
+          email,
+          password,
+          options: { data: { role: selectedRole } }
+        });
+
+        if (error) {
+          showMsg(error.message, 'error');
+          btn.disabled = false;
+          btn.textContent = 'Create Account';
+          return;
+        }
+
+        // Auto sign in after signup (if email confirmation is off)
+        if (data.session) {
+          redirectAfterLogin(data.user);
+        } else {
+          showMsg('Account created! Check your email to confirm, then log in.', 'success');
+          btn.disabled = false;
+          btn.textContent = 'Create Account';
+        }
+      }
+    }
+
+    function redirectAfterLogin(user) {
+      const role = user.user_metadata?.role;
+      if (role === 'wrecker') {
+        window.location.href = 'wrecker.html';
+      } else {
+        window.location.href = 'index.html';
+      }
+    }
+
+    function showMsg(text, type) {
+      const el = document.getElementById('msg');
+      el.textContent = text;
+      el.className = `msg ${type}`;
+      el.style.display = 'block';
+    }
+
+    function hideMsg() {
+      document.getElementById('msg').style.display = 'none';
+    }
+  </script>
+</body>
+</html>

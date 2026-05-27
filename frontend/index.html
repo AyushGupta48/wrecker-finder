@@ -319,8 +319,8 @@
 
   <header>
     <a class="logo" href="home.html">Parts<span>Finder</span></a>
-    <nav>
-      <a href="wrecker.html">Wrecker Portal →</a>
+    <nav id="headerNav">
+      <a href="login.html">Log In</a>
     </nav>
   </header>
 
@@ -402,6 +402,7 @@
               <th>Location</th>
               <th>Wrecker</th>
               <th>Contact</th>
+              <th id="saveColHeader" style="display:none">Save</th>
             </tr>
           </thead>
           <tbody id="resultsBody"></tbody>
@@ -414,36 +415,74 @@
     &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
   </footer>
 
-  <!-- Supabase JS (CDN) -->
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <script>
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
+    let currentUser = null;
+    let savedIds = new Set(); // listing IDs already saved by this user
+
+    // ── Check auth state and update header ──
+    async function init() {
+      const { data: { session } } = await db.auth.getSession();
+      const nav = document.getElementById("headerNav");
+
+      if (session) {
+        currentUser = session.user;
+        const role = session.user.user_metadata?.role;
+
+        // Load their already-saved listing IDs
+        const { data: saved } = await db
+          .from("saved_listings")
+          .select("listing_id")
+          .eq("user_id", currentUser.id);
+        if (saved) saved.forEach(r => savedIds.add(r.listing_id));
+
+        if (role === "wrecker") {
+          nav.innerHTML = `
+            <a href="wrecker.html">My Portal</a>
+            <a href="#" onclick="logout(); return false;" style="margin-left:10px">Log Out</a>`;
+        } else {
+          nav.innerHTML = `
+            <a href="account.html">Saved Parts</a>
+            <a href="#" onclick="logout(); return false;" style="margin-left:10px">Log Out</a>`;
+        }
+
+        // Show the Save column header
+        document.getElementById("saveColHeader").style.display = "";
+      } else {
+        nav.innerHTML = `<a href="login.html">Log In</a>`;
+      }
+    }
+
+    async function logout() {
+      await db.auth.signOut();
+      window.location.reload();
+    }
+
+    init();
+
+    // ── Models ──
     const modelsByMake = {
       Mazda:  ["Mazda 3", "Mazda 6", "CX-3"],
       Toyota: ["Corolla", "Yaris"],
       Honda:  ["Civic", "HR-V"]
     };
 
-    const makeSelect  = document.getElementById("makeSelect");
-    const modelSelect = document.getElementById("modelSelect");
-
-    // Populate models when make changes
-    makeSelect.addEventListener("change", () => {
-      const make = makeSelect.value;
+    document.getElementById("makeSelect").addEventListener("change", () => {
+      const make = document.getElementById("makeSelect").value;
+      const modelSelect = document.getElementById("modelSelect");
       modelSelect.innerHTML = '<option value="">— Car Model —</option>';
       if (!make) return;
       modelsByMake[make].forEach(m => {
         const opt = document.createElement("option");
-        opt.value = m;
-        opt.textContent = m;
+        opt.value = m; opt.textContent = m;
         modelSelect.appendChild(opt);
       });
     });
 
-    // Colour → approximate CSS colour (best-effort)
+    // ── Colour chip ──
     const colourMap = {
       white: "#fff", black: "#111", silver: "#c0c0c0", grey: "#888",
       gray: "#888", red: "#d32f2f", blue: "#1565c0", green: "#2e7d32",
@@ -461,19 +500,19 @@
       return "#ccc";
     }
 
+    // ── Search ──
     async function doSearch() {
       const make  = document.getElementById("makeSelect").value;
       const model = document.getElementById("modelSelect").value;
       const part  = document.getElementById("partSelect").value;
       const state = document.getElementById("stateSelect").value;
 
-      // Show results section
-      const section    = document.getElementById("resultsSection");
-      const loadingEl  = document.getElementById("loadingState");
-      const noResultsEl= document.getElementById("noResults");
-      const tableWrap  = document.getElementById("tableWrap");
-      const body       = document.getElementById("resultsBody");
-      const countEl    = document.getElementById("resultCount");
+      const section     = document.getElementById("resultsSection");
+      const loadingEl   = document.getElementById("loadingState");
+      const noResultsEl = document.getElementById("noResults");
+      const tableWrap   = document.getElementById("tableWrap");
+      const body        = document.getElementById("resultsBody");
+      const countEl     = document.getElementById("resultCount");
 
       section.style.display = "block";
       loadingEl.style.display = "block";
@@ -482,7 +521,6 @@
       body.innerHTML = "";
       countEl.textContent = "";
 
-      // Build Supabase query — only filter on fields that were selected
       let query = db.from("inventory").select("*");
       if (make)  query = query.eq("make", make);
       if (model) query = query.eq("model", model);
@@ -495,8 +533,7 @@
 
       if (error) {
         noResultsEl.style.display = "block";
-        document.getElementById("noResultsMsg").textContent =
-          "Something went wrong. Check your Supabase credentials.";
+        document.getElementById("noResultsMsg").textContent = "Something went wrong.";
         return;
       }
 
@@ -510,28 +547,70 @@
       countEl.textContent = `${data.length} listing${data.length !== 1 ? "s" : ""} found`;
       tableWrap.style.display = "block";
 
+      // Show save column only if logged in as customer
+      const showSave = currentUser && currentUser.user_metadata?.role !== "wrecker";
+      document.getElementById("saveColHeader").style.display = showSave ? "" : "none";
+
       data.forEach(row => {
         const dot = row.colour ? cssColour(row.colour) : null;
+        const alreadySaved = savedIds.has(row.id);
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${row.make ?? "—"}</td>
           <td>${row.model ?? "—"}</td>
           <td>${row.part_type ?? "—"}</td>
           <td>${row.year ?? "—"}</td>
-          <td>
-            ${dot ? `<span class="colour-chip">
-              <span class="colour-dot" style="background:${dot}"></span>
-              ${row.colour}
-            </span>` : (row.colour || "—")}
-          </td>
+          <td>${dot
+            ? `<span class="colour-chip"><span class="colour-dot" style="background:${dot}"></span>${row.colour}</span>`
+            : (row.colour || "—")}</td>
           <td>${row.suburb ? row.suburb + ", " : ""}${row.state ?? "—"}</td>
           <td>${row.wrecker_name ?? "—"}</td>
           <td><a class="contact-link" href="${formatContact(row.contact)}">${row.contact ?? "—"}</a></td>
+          ${showSave ? `<td>
+            <button
+              id="save-${row.id}"
+              onclick="toggleSave(${row.id}, this)"
+              title="${alreadySaved ? "Remove from saved" : "Save this listing"}"
+              style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 6px;opacity:${alreadySaved ? 1 : 0.3};transition:opacity 0.15s,transform 0.15s"
+              onmouseover="this.style.opacity=1;this.style.transform='scale(1.2)'"
+              onmouseout="this.style.opacity=${alreadySaved ? 1 : 0.3};this.style.transform='scale(1)'"
+            >${alreadySaved ? "🔖" : "🔖"}</button>
+          </td>` : ""}
         `;
         body.appendChild(tr);
       });
 
       section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // ── Save / unsave a listing ──
+    async function toggleSave(listingId, btn) {
+      if (!currentUser) { window.location.href = "login.html"; return; }
+
+      const alreadySaved = savedIds.has(listingId);
+      btn.style.opacity = "0.5";
+
+      if (alreadySaved) {
+        const { error } = await db
+          .from("saved_listings")
+          .delete()
+          .eq("user_id", currentUser.id)
+          .eq("listing_id", listingId);
+        if (!error) {
+          savedIds.delete(listingId);
+          btn.style.opacity = "0.3";
+          btn.onmouseout = () => { btn.style.opacity = "0.3"; btn.style.transform = "scale(1)"; };
+        }
+      } else {
+        const { error } = await db
+          .from("saved_listings")
+          .insert([{ user_id: currentUser.id, listing_id: listingId }]);
+        if (!error) {
+          savedIds.add(listingId);
+          btn.style.opacity = "1";
+          btn.onmouseout = () => { btn.style.opacity = "1"; btn.style.transform = "scale(1)"; };
+        }
+      }
     }
 
     function formatContact(contact) {
