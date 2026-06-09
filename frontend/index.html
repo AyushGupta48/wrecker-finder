@@ -34,6 +34,9 @@
       padding: 18px 40px;
       border-bottom: 2px solid var(--black);
       background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .logo {
@@ -46,6 +49,8 @@
     }
 
     .logo span { color: var(--accent); }
+
+    header nav { display: flex; gap: 10px; align-items: center; }
 
     header nav a {
       font-family: 'Barlow Condensed', sans-serif;
@@ -67,7 +72,7 @@
 
     /* ── Hero ── */
     .hero {
-      padding: 80px 40px 60px;
+      padding: 70px 40px 50px;
       max-width: 860px;
       margin: 0 auto;
       text-align: center;
@@ -97,7 +102,7 @@
       font-size: 18px;
       color: #555;
       max-width: 480px;
-      margin: 0 auto 48px;
+      margin: 0 auto 40px;
       line-height: 1.6;
     }
 
@@ -105,23 +110,33 @@
     .search-card {
       background: var(--black);
       border-radius: 2px;
-      padding: 36px 40px 40px;
-      max-width: 700px;
+      padding: 32px 36px 36px;
+      max-width: 820px;
       margin: 0 auto;
+    }
+
+    .search-card-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 16px;
     }
 
     .search-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 20px;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
     .search-grid select {
       width: 100%;
-      padding: 14px 16px;
+      padding: 13px 14px;
       font-family: 'Barlow', sans-serif;
-      font-size: 15px;
+      font-size: 14px;
       background: #1a1a1a;
       color: var(--white);
       border: 1px solid #333;
@@ -133,12 +148,11 @@
     }
 
     .search-grid select:focus { border-color: var(--accent); }
-
-    .search-grid option { background: #1a1a1a; }
+    .search-grid option, .search-grid optgroup { background: #1a1a1a; }
 
     .search-btn {
       width: 100%;
-      padding: 16px;
+      padding: 15px;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 18px;
       font-weight: 700;
@@ -154,15 +168,11 @@
 
     .search-btn:hover { background: #c93615; }
     .search-btn:active { transform: scale(0.99); }
-
-    .search-btn:disabled {
-      background: #444;
-      cursor: not-allowed;
-    }
+    .search-btn:disabled { background: #444; cursor: not-allowed; }
 
     /* ── Results ── */
     .results-section {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 60px auto;
       padding: 0 40px;
       display: none;
@@ -193,28 +203,22 @@
     }
 
     /* Table */
-    .results-table-wrap {
-      overflow-x: auto;
-    }
+    .results-table-wrap { overflow-x: auto; }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
 
-    thead tr {
-      background: var(--black);
-    }
+    thead tr { background: var(--black); }
 
     thead th {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
       color: var(--white);
-      padding: 14px 16px;
+      padding: 13px 16px;
       text-align: left;
+      white-space: nowrap;
     }
 
     tbody tr {
@@ -225,15 +229,15 @@
     tbody tr:hover { background: #eeeae4; }
 
     tbody td {
-      padding: 14px 16px;
-      font-size: 15px;
+      padding: 13px 16px;
+      font-size: 14px;
       vertical-align: middle;
     }
 
     .contact-link {
       font-family: 'Barlow Condensed', sans-serif;
       font-weight: 600;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 0.5px;
       color: var(--accent);
       text-decoration: none;
@@ -244,24 +248,10 @@
       transition: background 0.15s, color 0.15s;
     }
 
-    .contact-link:hover {
-      background: var(--accent);
-      color: var(--white);
-    }
+    .contact-link:hover { background: var(--accent); color: var(--white); }
 
-    .colour-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .colour-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      border: 1px solid rgba(0,0,0,0.15);
-      flex-shrink: 0;
-    }
+    .colour-chip { display: inline-flex; align-items: center; gap: 7px; }
+    .colour-dot { width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0; }
 
     /* States */
     .no-results {
@@ -304,13 +294,17 @@
       color: var(--mid);
     }
 
-    /* Responsive */
-    @media (max-width: 600px) {
+    /* ── Responsive ── */
+    @media (max-width: 760px) {
       header { padding: 14px 20px; }
-      .hero { padding: 50px 20px 40px; }
-      .search-card { padding: 24px 20px 28px; }
-      .search-grid { grid-template-columns: 1fr; }
+      .hero { padding: 50px 20px 36px; }
+      .search-card { padding: 22px 18px 26px; }
+      .search-grid { grid-template-columns: 1fr 1fr; }
       .results-section { padding: 0 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .search-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -331,29 +325,13 @@
       <p>Search real-time inventory from wreckers across Australia. No more ringing around.</p>
 
       <div class="search-card">
+        <p class="search-card-label">Search inventory</p>
         <div class="search-grid">
-          <select id="makeSelect">
-            <option value="">— Car Make —</option>
-            <option value="Mazda">Mazda</option>
-            <option value="Toyota">Toyota</option>
-            <option value="Honda">Honda</option>
-          </select>
-
-          <select id="modelSelect">
-            <option value="">— Car Model —</option>
-          </select>
-
-          <select id="partSelect">
-            <option value="">— Part Type —</option>
-            <option value="Door">Door</option>
-            <option value="Mirror">Mirror</option>
-            <option value="Bumper">Bumper</option>
-            <option value="Headlight">Headlight</option>
-            <option value="Taillight">Taillight</option>
-            <option value="Bonnet">Bonnet</option>
-            <option value="Boot Lid">Boot Lid</option>
-          </select>
-
+          <select id="makeSelect"></select>
+          <select id="modelSelect"></select>
+          <select id="partSelect"></select>
+          <select id="yearFromSelect"></select>
+          <select id="yearToSelect"></select>
           <select id="stateSelect">
             <option value="">— State —</option>
             <option value="NSW">NSW</option>
@@ -366,6 +344,8 @@
             <option value="NT">NT</option>
           </select>
         </div>
+
+        <p id="searchValidMsg" style="display:none;color:#ff7a5c;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.5px;margin-bottom:10px;text-align:left;"></p>
 
         <button class="search-btn" id="searchBtn" onclick="doSearch()">
           Search Parts
@@ -415,15 +395,38 @@
     &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
   </footer>
 
+  <script src="data.js"></script>
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
     let currentUser = null;
-    let savedIds = new Set(); // listing IDs already saved by this user
+    let savedIds = new Set();
 
-    // ── Check auth state and update header ──
+    // ── Populate dropdowns ──
+    populateMakeSelect(document.getElementById("makeSelect"));
+    populateQuickPartSelect(document.getElementById("partSelect"));
+    populateYearSelect(document.getElementById("yearFromSelect"), "— Year From —");
+    populateYearSelect(document.getElementById("yearToSelect"),   "— Year To —");
+
+    document.getElementById("makeSelect").addEventListener("change", function() {
+      populateModelSelect(document.getElementById("modelSelect"), this.value);
+      this.style.borderColor = "";
+      document.getElementById("modelSelect").style.borderColor = "";
+    });
+    populateModelSelect(document.getElementById("modelSelect"), "");
+
+    ["modelSelect", "partSelect"].forEach(id => {
+      document.getElementById(id).addEventListener("change", function() {
+        this.style.borderColor = "";
+        if (!document.querySelector(".search-grid select[style*='ff7a5c']")) {
+          document.getElementById("searchValidMsg").style.display = "none";
+        }
+      });
+    });
+
+    // ── Auth state ──
     async function init() {
       const { data: { session } } = await db.auth.getSession();
       const nav = document.getElementById("headerNav");
@@ -432,7 +435,6 @@
         currentUser = session.user;
         const role = session.user.user_metadata?.role;
 
-        // Load their already-saved listing IDs
         const { data: saved } = await db
           .from("saved_listings")
           .select("listing_id")
@@ -442,14 +444,13 @@
         if (role === "wrecker") {
           nav.innerHTML = `
             <a href="wrecker.html">My Portal</a>
-            <a href="#" onclick="logout(); return false;" style="margin-left:10px">Log Out</a>`;
+            <a href="#" onclick="logout(); return false;">Log Out</a>`;
         } else {
           nav.innerHTML = `
             <a href="account.html">Saved Parts</a>
-            <a href="#" onclick="logout(); return false;" style="margin-left:10px">Log Out</a>`;
+            <a href="#" onclick="logout(); return false;">Log Out</a>`;
         }
 
-        // Show the Save column header
         document.getElementById("saveColHeader").style.display = "";
       } else {
         nav.innerHTML = `<a href="login.html">Log In</a>`;
@@ -463,37 +464,18 @@
 
     init();
 
-    // ── Models ──
-    const modelsByMake = {
-      Mazda:  ["Mazda 3", "Mazda 6", "CX-3"],
-      Toyota: ["Corolla", "Yaris"],
-      Honda:  ["Civic", "HR-V"]
-    };
-
-    document.getElementById("makeSelect").addEventListener("change", () => {
-      const make = document.getElementById("makeSelect").value;
-      const modelSelect = document.getElementById("modelSelect");
-      modelSelect.innerHTML = '<option value="">— Car Model —</option>';
-      if (!make) return;
-      modelsByMake[make].forEach(m => {
-        const opt = document.createElement("option");
-        opt.value = m; opt.textContent = m;
-        modelSelect.appendChild(opt);
-      });
-    });
-
     // ── Colour chip ──
     const colourMap = {
-      white: "#fff", black: "#111", silver: "#c0c0c0", grey: "#888",
-      gray: "#888", red: "#d32f2f", blue: "#1565c0", green: "#2e7d32",
-      yellow: "#f9a825", orange: "#e65100", brown: "#5d4037",
-      gold: "#c6a819", purple: "#6a1b9a", pink: "#e91e8c",
-      cream: "#f5e6c8", champagne: "#f7e7ce", beige: "#f0e4c8"
+      white:"#fff", black:"#111", silver:"#c0c0c0", grey:"#888", gray:"#888",
+      red:"#d32f2f", blue:"#1565c0", green:"#2e7d32", yellow:"#f9a825",
+      orange:"#e65100", brown:"#5d4037", gold:"#c6a819", purple:"#6a1b9a",
+      pink:"#e91e8c", cream:"#f5e6c8", champagne:"#f7e7ce", beige:"#f0e4c8",
+      bronze:"#8c6239", maroon:"#880000", navy:"#001f5b", teal:"#00695c",
     };
 
-    function cssColour(colourStr) {
-      if (!colourStr) return null;
-      const key = colourStr.toLowerCase().trim();
+    function cssColour(str) {
+      if (!str) return null;
+      const key = str.toLowerCase().trim();
       for (const [k, v] of Object.entries(colourMap)) {
         if (key.includes(k)) return v;
       }
@@ -502,43 +484,70 @@
 
     // ── Search ──
     async function doSearch() {
-      const make  = document.getElementById("makeSelect").value;
-      const model = document.getElementById("modelSelect").value;
-      const part  = document.getElementById("partSelect").value;
-      const state = document.getElementById("stateSelect").value;
+      const make      = document.getElementById("makeSelect").value;
+      const model     = document.getElementById("modelSelect").value;
+      const part      = document.getElementById("partSelect").value;
+      const yearFrom  = document.getElementById("yearFromSelect").value;
+      const yearTo    = document.getElementById("yearToSelect").value;
+      const state     = document.getElementById("stateSelect").value;
 
-      const section     = document.getElementById("resultsSection");
-      const loadingEl   = document.getElementById("loadingState");
-      const noResultsEl = document.getElementById("noResults");
-      const tableWrap   = document.getElementById("tableWrap");
-      const body        = document.getElementById("resultsBody");
-      const countEl     = document.getElementById("resultCount");
+      // Required field validation
+      const requiredMap = { makeSelect: make, modelSelect: model, partSelect: part };
+      const missing = Object.entries(requiredMap).filter(([, v]) => !v);
+      const validMsg = document.getElementById("searchValidMsg");
+
+      document.querySelectorAll(".search-grid select").forEach(el => {
+        el.style.borderColor = "";
+      });
+
+      if (missing.length > 0) {
+        missing.forEach(([id]) => {
+          document.getElementById(id).style.borderColor = "#ff7a5c";
+        });
+        const labels = { makeSelect: "Make", modelSelect: "Model", partSelect: "Part Type" };
+        const names = missing.map(([id]) => labels[id]).join(", ");
+        validMsg.textContent = `Please select a ${names} before searching.`;
+        validMsg.style.display = "block";
+        return;
+      }
+
+      validMsg.style.display = "none";
+
+      const section   = document.getElementById("resultsSection");
+      const loadingEl = document.getElementById("loadingState");
+      const noResEl   = document.getElementById("noResults");
+      const tableWrap = document.getElementById("tableWrap");
+      const body      = document.getElementById("resultsBody");
+      const countEl   = document.getElementById("resultCount");
 
       section.style.display = "block";
       loadingEl.style.display = "block";
-      noResultsEl.style.display = "none";
+      noResEl.style.display = "none";
       tableWrap.style.display = "none";
       body.innerHTML = "";
       countEl.textContent = "";
 
       let query = db.from("inventory").select("*");
-      if (make)  query = query.eq("make", make);
-      if (model) query = query.eq("model", model);
-      if (part)  query = query.eq("part_type", part);
-      if (state) query = query.eq("state", state);
+      if (make)     query = query.eq("make", make);
+      if (model)    query = query.eq("model", model);
+      if (part)     query = query.eq("part_type", part);
+      if (state)    query = query.eq("state", state);
+      if (yearFrom) query = query.gte("year", parseInt(yearFrom));
+      if (yearTo)   query = query.lte("year", parseInt(yearTo));
+      query = query.eq("status", "available");  // hide sold parts
       query = query.order("created_at", { ascending: false });
 
       const { data, error } = await query;
       loadingEl.style.display = "none";
 
       if (error) {
-        noResultsEl.style.display = "block";
-        document.getElementById("noResultsMsg").textContent = "Something went wrong.";
+        noResEl.style.display = "block";
+        document.getElementById("noResultsMsg").textContent = "Something went wrong. Please try again.";
         return;
       }
 
       if (!data || data.length === 0) {
-        noResultsEl.style.display = "block";
+        noResEl.style.display = "block";
         document.getElementById("noResultsMsg").textContent =
           "No listings matched your search. Try broadening your filters.";
         return;
@@ -547,7 +556,6 @@
       countEl.textContent = `${data.length} listing${data.length !== 1 ? "s" : ""} found`;
       tableWrap.style.display = "block";
 
-      // Show save column only if logged in as customer
       const showSave = currentUser && currentUser.user_metadata?.role !== "wrecker";
       document.getElementById("saveColHeader").style.display = showSave ? "" : "none";
 
@@ -574,7 +582,7 @@
               style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 6px;opacity:${alreadySaved ? 1 : 0.3};transition:opacity 0.15s,transform 0.15s"
               onmouseover="this.style.opacity=1;this.style.transform='scale(1.2)'"
               onmouseout="this.style.opacity=${alreadySaved ? 1 : 0.3};this.style.transform='scale(1)'"
-            >${alreadySaved ? "🔖" : "🔖"}</button>
+            >🔖</button>
           </td>` : ""}
         `;
         body.appendChild(tr);
@@ -583,7 +591,7 @@
       section.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    // ── Save / unsave a listing ──
+    // ── Save / unsave ──
     async function toggleSave(listingId, btn) {
       if (!currentUser) { window.location.href = "login.html"; return; }
 

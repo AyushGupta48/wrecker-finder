@@ -19,9 +19,7 @@
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html, body {
-      height: 100%;
-    }
+    html, body { height: 100%; }
 
     body {
       font-family: 'Barlow', sans-serif;
@@ -78,7 +76,7 @@
       position: relative;
       z-index: 10;
       text-align: center;
-      padding: 90px 40px 70px;
+      padding: 90px 40px 60px;
     }
 
     .hero-eyebrow {
@@ -120,6 +118,48 @@
       margin: 0 auto 60px;
       line-height: 1.7;
       animation: fadeUp 0.6s ease 0.2s both;
+    }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 660px;
+      margin: 0 auto 60px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      animation: fadeUp 0.6s ease 0.25s both;
+    }
+
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 18px 20px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
     }
 
     /* ── Choice cards ── */
@@ -173,11 +213,7 @@
 
     .choice-card:hover::before { opacity: 1; }
 
-    .card-icon {
-      font-size: 40px;
-      margin-bottom: 20px;
-      display: block;
-    }
+    .card-icon { font-size: 40px; margin-bottom: 20px; display: block; }
 
     .card-label {
       font-family: 'Barlow Condensed', sans-serif;
@@ -189,7 +225,7 @@
     }
 
     .choice-card.customer .card-label { color: var(--accent); }
-    .choice-card.wrecker .card-label { color: var(--accent2); }
+    .choice-card.wrecker .card-label  { color: var(--accent2); }
 
     .card-title {
       font-family: 'Barlow Condensed', sans-serif;
@@ -224,34 +260,8 @@
 
     .choice-card:hover .card-cta { gap: 12px; }
 
-    .choice-card.customer .card-cta {
-      background: var(--accent);
-      color: var(--white);
-    }
-
-    .choice-card.wrecker .card-cta {
-      background: var(--accent2);
-      color: var(--black);
-    }
-
-    /* ── Divider ── */
-    .or-divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 10;
-    }
-
-    .or-divider span {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 2px;
-      color: rgba(255,255,255,0.2);
-      text-transform: uppercase;
-      padding: 0 8px;
-    }
+    .choice-card.customer .card-cta { background: var(--accent); color: var(--white); }
+    .choice-card.wrecker  .card-cta { background: var(--accent2); color: var(--black); }
 
     /* ── How it works strip ── */
     .how-strip {
@@ -259,7 +269,7 @@
       z-index: 10;
       margin: 80px auto 0;
       max-width: 900px;
-      padding: 0 40px 80px;
+      padding: 0 40px 0;
     }
 
     .strip-label {
@@ -270,7 +280,7 @@
       text-transform: uppercase;
       color: rgba(255,255,255,0.25);
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
 
     .steps {
@@ -310,18 +320,181 @@
       line-height: 1.6;
     }
 
+    /* ── Wrecker pitch section ── */
+    .wrecker-pitch {
+      position: relative;
+      z-index: 10;
+      margin: 100px auto 0;
+      max-width: 900px;
+      padding: 0 40px;
+    }
+
+    .pitch-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+
+    .pitch-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+
+    .pitch-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      line-height: 0.95;
+    }
+
+    .pitch-cta {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: var(--accent2);
+      color: var(--black);
+      padding: 13px 28px;
+      border-radius: 2px;
+      transition: background 0.15s, gap 0.15s;
+      white-space: nowrap;
+    }
+
+    .pitch-cta:hover { background: #d4901e; gap: 12px; }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .benefit {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 28px 28px 26px;
+      transition: background 0.15s;
+    }
+
+    .benefit:hover { background: rgba(255,255,255,0.05); }
+
+    .benefit-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .benefit-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .benefit-desc {
+      font-size: 14px;
+      color: rgba(245,242,238,0.5);
+      line-height: 1.6;
+    }
+
+    /* ── Makes strip ── */
+    .makes-strip {
+      position: relative;
+      z-index: 10;
+      margin: 80px auto 0;
+      max-width: 900px;
+      padding: 0 40px;
+    }
+
+    .makes-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 20px;
+    }
+
+    .makes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .make-chip {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 5px 12px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .make-chip:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
+
     /* ── Footer ── */
     footer {
       position: relative;
       z-index: 10;
-      text-align: center;
-      padding: 28px 40px;
+      margin-top: 80px;
       border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 13px;
       letter-spacing: 0.5px;
       color: rgba(255,255,255,0.2);
     }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,0.25);
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
 
     /* ── Animations ── */
     @keyframes fadeUp {
@@ -332,11 +505,17 @@
     /* ── Responsive ── */
     @media (max-width: 700px) {
       header { padding: 18px 24px; }
-      .hero { padding: 60px 24px 50px; }
+      .hero { padding: 60px 24px 40px; }
+      .stats-bar { flex-direction: column; margin-bottom: 40px; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .stat-item:last-child { border-bottom: none; }
       .choices { padding: 0 24px; flex-direction: column; align-items: center; }
       .choice-card { width: 100%; max-width: 360px; }
       .steps { grid-template-columns: 1fr; }
-      .how-strip { padding: 0 24px 60px; }
+      .how-strip, .wrecker-pitch, .makes-strip { padding: 0 24px; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .pitch-header { flex-direction: column; align-items: flex-start; }
+      footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -355,8 +534,29 @@
       <p class="hero-sub">
         Real-time car parts from wreckers across Australia. No more ringing around. No middleman.
       </p>
+
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value">25+</div>
+          <div class="stat-label">Makes Covered</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">80+</div>
+          <div class="stat-label">Part Categories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">All 8</div>
+          <div class="stat-label">States & Territories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">Free</div>
+          <div class="stat-label">To List</div>
+        </div>
+      </div>
     </section>
 
+    <!-- Choice cards -->
     <div class="choices">
 
       <a class="choice-card customer" href="index.html">
@@ -369,7 +569,7 @@
         <span class="card-cta">Search Now →</span>
       </a>
 
-      <a class="choice-card wrecker" href="wrecker.html">
+      <a class="choice-card wrecker" href="login.html">
         <span class="card-icon">🔧</span>
         <div class="card-label">For Wreckers</div>
         <div class="card-title">List a Part</div>
@@ -381,13 +581,14 @@
 
     </div>
 
+    <!-- How it works -->
     <div class="how-strip">
-      <p class="strip-label">How it works</p>
+      <p class="strip-label">How it works — buyers</p>
       <div class="steps">
         <div class="step">
           <div class="step-num">01</div>
           <div class="step-title">Search your part</div>
-          <p class="step-desc">Select your car make, model, part type and state. Takes 10 seconds.</p>
+          <p class="step-desc">Select make, model, part type and state. Filter by year. Takes 10 seconds.</p>
         </div>
         <div class="step">
           <div class="step-num">02</div>
@@ -401,10 +602,82 @@
         </div>
       </div>
     </div>
+
+    <!-- Wrecker pitch -->
+    <div class="wrecker-pitch">
+      <div class="pitch-header">
+        <div>
+          <p class="pitch-eyebrow">For Wrecking Businesses</p>
+          <h2 class="pitch-title">Reach more<br>customers.</h2>
+        </div>
+        <a class="pitch-cta" href="login.html">Start Listing Free →</a>
+      </div>
+
+      <div class="benefits-grid">
+        <div class="benefit">
+          <span class="benefit-icon">💸</span>
+          <div class="benefit-title">Completely Free</div>
+          <p class="benefit-desc">No subscription costs, no commission on sales, no listing fees. Add as many parts as you have in stock at zero cost.</p>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">📍</span>
+          <div class="benefit-title">Get Found by Locals</div>
+          <p class="benefit-desc">Buyers filter by state. When someone nearby searches for exactly what you have, your listing shows up at the top.</p>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">📞</span>
+          <div class="benefit-title">Direct Contact Only</div>
+          <p class="benefit-desc">Your phone number or email goes straight on the listing. Buyers contact you directly — no platform middleman taking a cut.</p>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">⚡</span>
+          <div class="benefit-title">Manage in Seconds</div>
+          <p class="benefit-desc">Add a listing in under a minute. Edit details or mark a part as sold instantly from any device, any time.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Popular makes strip -->
+    <div class="makes-strip">
+      <p class="makes-label">Supported makes</p>
+      <div class="makes-list">
+        <a class="make-chip" href="index.html">Toyota</a>
+        <a class="make-chip" href="index.html">Mazda</a>
+        <a class="make-chip" href="index.html">Ford</a>
+        <a class="make-chip" href="index.html">Holden</a>
+        <a class="make-chip" href="index.html">Hyundai</a>
+        <a class="make-chip" href="index.html">Kia</a>
+        <a class="make-chip" href="index.html">Nissan</a>
+        <a class="make-chip" href="index.html">Mitsubishi</a>
+        <a class="make-chip" href="index.html">Subaru</a>
+        <a class="make-chip" href="index.html">Honda</a>
+        <a class="make-chip" href="index.html">Volkswagen</a>
+        <a class="make-chip" href="index.html">BMW</a>
+        <a class="make-chip" href="index.html">Mercedes-Benz</a>
+        <a class="make-chip" href="index.html">Audi</a>
+        <a class="make-chip" href="index.html">Suzuki</a>
+        <a class="make-chip" href="index.html">Lexus</a>
+        <a class="make-chip" href="index.html">Isuzu</a>
+        <a class="make-chip" href="index.html">Land Rover</a>
+        <a class="make-chip" href="index.html">Jeep</a>
+        <a class="make-chip" href="index.html">Skoda</a>
+        <a class="make-chip" href="index.html">Volvo</a>
+        <a class="make-chip" href="index.html">Renault</a>
+        <a class="make-chip" href="index.html">LDV</a>
+        <a class="make-chip" href="index.html">MG</a>
+        <a class="make-chip" href="index.html">Great Wall</a>
+      </div>
+    </div>
+
   </main>
 
   <footer>
-    &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
+    <span class="footer-copy">&copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia</span>
+    <nav class="footer-links">
+      <a href="index.html">Search Parts</a>
+      <a href="login.html">List a Part</a>
+      <a href="login.html">Log In</a>
+    </nav>
   </footer>
 
 </body>

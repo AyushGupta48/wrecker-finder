@@ -12,6 +12,7 @@
       --black: #0a0a0a;
       --white: #f5f2ee;
       --accent: #e8431a;
+      --accent2: #f5a623;
       --mid: #888;
       --border: #d0cbc4;
     }
@@ -33,6 +34,9 @@
       padding: 18px 40px;
       border-bottom: 2px solid var(--black);
       background: var(--white);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
     .logo {
@@ -45,6 +49,8 @@
     }
 
     .logo span { color: var(--accent); }
+
+    header nav { display: flex; gap: 10px; align-items: center; }
 
     header nav a {
       font-family: 'Barlow Condensed', sans-serif;
@@ -59,16 +65,13 @@
       transition: background 0.15s, color 0.15s;
     }
 
-    header nav a:hover {
-      background: var(--black);
-      color: var(--white);
-    }
+    header nav a:hover { background: var(--black); color: var(--white); }
 
-    /* ── Page layout ── */
+    /* ── Page ── */
     .page {
-      max-width: 640px;
+      max-width: 740px;
       margin: 0 auto;
-      padding: 60px 40px 80px;
+      padding: 56px 40px 0;
     }
 
     .page-eyebrow {
@@ -78,12 +81,12 @@
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .page h1 {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(40px, 7vw, 62px);
+      font-size: clamp(38px, 6vw, 56px);
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: -0.5px;
@@ -92,32 +95,40 @@
     }
 
     .page-desc {
-      font-size: 16px;
+      font-size: 15px;
       color: #666;
       line-height: 1.6;
-      margin-bottom: 40px;
-      padding-bottom: 32px;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
       border-bottom: 1px solid var(--border);
     }
 
-    /* ── Form ── */
+    /* ── Form sections ── */
+    .form-section { margin-bottom: 28px; }
+
+    .form-section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 14px;
+      display: block;
+    }
+
     .form-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 12px;
     }
 
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
     .form-group.full { grid-column: 1 / -1; }
 
     label {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 1.5px;
       text-transform: uppercase;
@@ -126,7 +137,7 @@
 
     input, select {
       width: 100%;
-      padding: 13px 14px;
+      padding: 12px 13px;
       font-family: 'Barlow', sans-serif;
       font-size: 15px;
       background: #fff;
@@ -138,29 +149,108 @@
       transition: border-color 0.15s;
     }
 
-    input:focus, select:focus {
-      border-color: var(--black);
-    }
-
+    input:focus, select:focus { border-color: var(--black); }
     input::placeholder { color: #bbb; }
 
     .optional-tag {
-      font-size: 11px;
+      font-size: 10px;
       color: #bbb;
       font-style: italic;
-      margin-left: 4px;
+      margin-left: 3px;
       text-transform: none;
       letter-spacing: 0;
     }
 
-    /* Submit */
-    .submit-row {
-      grid-column: 1 / -1;
-      margin-top: 8px;
+    /* ── Parts selector ── */
+    .parts-section {
+      border: 1.5px solid var(--border);
+      border-radius: 3px;
+      padding: 20px 20px 16px;
+      margin-bottom: 20px;
     }
 
+    .parts-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .parts-section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    .parts-actions { display: flex; gap: 8px; }
+
+    .parts-action-btn {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: none;
+      border: 1.5px solid var(--border);
+      color: var(--mid);
+      padding: 5px 12px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .parts-action-btn:hover { border-color: var(--black); color: var(--black); }
+
+    .parts-category { margin-bottom: 14px; }
+    .parts-category:last-child { margin-bottom: 0; }
+
+    .parts-cat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #bbb;
+      margin-bottom: 8px;
+    }
+
+    .chips-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .part-chip {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      padding: 7px 13px;
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      cursor: pointer;
+      background: #fff;
+      color: #555;
+      transition: all 0.12s;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .part-chip:hover { border-color: #999; color: var(--black); }
+
+    .part-chip.selected {
+      background: var(--black);
+      border-color: var(--black);
+      color: var(--white);
+    }
+
+    /* ── Submit ── */
     .submit-btn {
-      padding: 16px 36px;
+      width: 100%;
+      padding: 16px;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 18px;
       font-weight: 700;
@@ -172,7 +262,6 @@
       border-radius: 2px;
       cursor: pointer;
       transition: background 0.15s, transform 0.1s;
-      width: 100%;
     }
 
     .submit-btn:hover { background: #c93615; }
@@ -181,79 +270,31 @@
 
     /* Messages */
     .msg {
-      grid-column: 1 / -1;
-      padding: 16px 20px;
+      padding: 14px 18px;
       border-radius: 2px;
       font-size: 15px;
       font-weight: 500;
       display: none;
-      margin-top: 4px;
+      margin-top: 14px;
     }
 
-    .msg.success {
-      background: #e8f5e9;
-      border: 1.5px solid #4caf50;
-      color: #1b5e20;
-    }
+    .msg.success { background: #e8f5e9; border: 1.5px solid #4caf50; color: #1b5e20; }
+    .msg.error   { background: #fce4ec; border: 1.5px solid #e91e63; color: #880e4f; }
 
-    .msg.error {
-      background: #fce4ec;
-      border: 1.5px solid #e91e63;
-      color: #880e4f;
-    }
-
-    /* Info box */
-    .info-box {
-      background: #fff8f6;
-      border: 1.5px solid #f5c4b8;
-      border-radius: 2px;
-      padding: 18px 20px;
-      margin-bottom: 32px;
-      font-size: 14px;
-      color: #5a2d22;
-      line-height: 1.6;
-    }
-
-    .info-box strong {
-      display: block;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      color: var(--accent);
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 40px;
-      border-top: 2px solid var(--black);
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
-      letter-spacing: 0.5px;
-      color: var(--mid);
-    }
-
-    @media (max-width: 600px) {
-      header { padding: 14px 20px; }
-      .page { padding: 40px 20px 60px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .form-group.full { grid-column: 1; }
-    }
-
-    /* ── My Listings ── */
+    /* ── My Cars section ── */
     .my-listings {
-      max-width: 640px;
+      max-width: 740px;
       margin: 0 auto;
-      padding: 0 40px 80px;
+      padding: 56px 40px 80px;
     }
 
-    .section-divider {
-      border: none;
-      border-top: 2px solid var(--black);
-      margin-bottom: 40px;
+    .section-divider { border: none; border-top: 2px solid var(--black); margin-bottom: 28px; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 6px;
     }
 
     .section-title {
@@ -262,99 +303,133 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: -0.5px;
-      margin-bottom: 6px;
     }
 
-    .section-sub {
+    .listing-count {
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 14px;
-      color: #666;
-      margin-bottom: 28px;
+      font-weight: 600;
+      color: var(--mid);
     }
 
-    .listings-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
+    .section-sub { font-size: 14px; color: #666; margin-bottom: 24px; }
 
-    .listing-card {
+    /* Car cards */
+    .cars-list { display: flex; flex-direction: column; gap: 14px; }
+
+    .car-card {
       background: #fff;
       border: 1.5px solid var(--border);
       border-radius: 3px;
-      padding: 18px 18px 14px;
-      position: relative;
+      padding: 20px 20px 16px;
       transition: border-color 0.15s;
     }
 
-    .listing-card:hover { border-color: #999; }
+    .car-card:hover { border-color: #aaa; }
 
-    .lc-part {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
-      text-transform: uppercase;
-      margin-bottom: 2px;
+    .cc-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
     }
 
-    .lc-car {
+    .cc-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 22px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .cc-meta {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 13px;
       font-weight: 600;
       color: var(--mid);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
+      letter-spacing: 0.3px;
     }
 
-    .lc-details {
-      font-size: 13px;
-      color: #555;
-      line-height: 1.8;
-      margin-bottom: 14px;
-    }
-
-    .lc-details span {
+    .cc-remove-all {
+      flex-shrink: 0;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
-      color: var(--mid);
-      margin-right: 6px;
-    }
-
-    .lc-footer {
-      display: flex;
-      justify-content: flex-end;
-      padding-top: 10px;
-      border-top: 1px solid var(--border);
-    }
-
-    .delete-btn {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
       background: none;
       border: 1.5px solid #ddd;
-      color: #999;
-      padding: 6px 14px;
+      color: #bbb;
+      padding: 6px 13px;
       border-radius: 2px;
       cursor: pointer;
       transition: all 0.15s;
+      white-space: nowrap;
     }
 
-    .delete-btn:hover {
-      border-color: #e91e63;
-      color: #e91e63;
-      background: #fce4ec;
+    .cc-remove-all:hover { border-color: #e91e63; color: #e91e63; background: #fce4ec; }
+
+    .cc-parts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    .cc-part-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      padding: 6px 10px 6px 12px;
+      border: 1.5px solid var(--border);
+      border-radius: 2px;
+      background: var(--white);
+      color: var(--black);
+    }
+
+    .cc-part-x {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #bbb;
+      font-size: 14px;
+      line-height: 1;
+      padding: 0;
+      transition: color 0.12s, background 0.12s;
+      font-family: sans-serif;
+    }
+
+    .cc-part-x:hover { color: #e91e63; background: #fce4ec; }
+
+    .cc-footer {
+      margin-top: 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #bbb;
+      text-align: right;
     }
 
     .listings-empty {
-      grid-column: 1 / -1;
       text-align: center;
-      padding: 40px 20px;
+      padding: 48px 20px;
       border: 2px dashed var(--border);
       border-radius: 2px;
       color: var(--mid);
@@ -362,7 +437,6 @@
     }
 
     .listings-loading {
-      grid-column: 1 / -1;
       text-align: center;
       padding: 40px;
       color: var(--mid);
@@ -381,10 +455,82 @@
 
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    @media (max-width: 600px) {
-      .my-listings { padding: 0 20px 60px; }
-      .listings-grid { grid-template-columns: 1fr; }
+    footer {
+      text-align: center;
+      padding: 40px;
+      border-top: 2px solid var(--black);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      color: var(--mid);
     }
+
+    @media (max-width: 600px) {
+      header { padding: 14px 20px; }
+      .page { padding: 36px 20px 0; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .my-listings { padding: 40px 20px 60px; }
+    }
+
+    /* ── Sold state ── */
+    .cc-part-chip.sold {
+      background: #f5f5f5;
+      border-color: #ddd;
+      color: #aaa;
+      text-decoration: line-through;
+    }
+
+    .cc-sold-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: none;
+      border: 1.5px solid #ccc;
+      cursor: pointer;
+      color: #aaa;
+      font-size: 10px;
+      line-height: 1;
+      padding: 0;
+      margin-left: 2px;
+      transition: color 0.12s, background 0.12s, border-color 0.12s;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .cc-sold-btn:hover {
+      color: #fff;
+      background: #4caf50;
+      border-color: #4caf50;
+    }
+
+    .cc-part-chip.sold .cc-sold-btn {
+      background: #4caf50;
+      border-color: #4caf50;
+      color: #fff;
+    }
+
+    .cc-part-chip.sold .cc-sold-btn:hover {
+      background: #e91e63;
+      border-color: #e91e63;
+    }
+
+    .sold-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #4caf50;
+      margin-left: 4px;
+    }
+
+    .cc-part-chip.sold .sold-label { display: inline; }
+    .cc-part-chip:not(.sold) .sold-label { display: none; }
+
   </style>
 </head>
 
@@ -392,7 +538,7 @@
 
   <header>
     <a class="logo" href="home.html">Parts<span>Finder</span></a>
-    <nav style="display:flex;gap:10px;align-items:center;">
+    <nav>
       <a href="index.html">Find Parts</a>
       <a href="#" onclick="logout(); return false;">Log Out</a>
     </nav>
@@ -403,105 +549,100 @@
       <p class="page-eyebrow">For Businesses</p>
       <h1>Wrecker Portal</h1>
       <p class="page-desc">
-        Add parts you have in stock and customers can find you directly — no middleman, no listing fees.
+        Enter your car's details, then tick the parts you have available. We'll create a listing for each one — customers can find you and contact you directly.
       </p>
 
-      <div class="info-box">
-        <strong>How it works</strong>
-        Add a listing for each part you have available. Customers searching for that exact part in your state will see your details and contact you directly.
+      <!-- ── Car Details ── -->
+      <div class="form-section">
+        <span class="form-section-label">Car Details</span>
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Make</label>
+            <select id="make" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Model</label>
+            <select id="model" required>
+              <option value="">Select model</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Year</label>
+            <select id="year" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Colour <span class="optional-tag">optional</span></label>
+            <input id="colour" type="text" placeholder="e.g. Silver" />
+          </div>
+
+          <div class="form-group">
+            <label>State</label>
+            <select id="state" required>
+              <option value="">Select state</option>
+              <option value="NSW">NSW</option>
+              <option value="VIC">VIC</option>
+              <option value="QLD">QLD</option>
+              <option value="SA">SA</option>
+              <option value="WA">WA</option>
+              <option value="TAS">TAS</option>
+              <option value="ACT">ACT</option>
+              <option value="NT">NT</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Suburb <span class="optional-tag">optional</span></label>
+            <input id="suburb" type="text" placeholder="e.g. Parramatta" />
+          </div>
+
+          <div class="form-group full">
+            <label>Business Name</label>
+            <input id="wrecker_name" type="text" placeholder="Your wrecker business name" required />
+          </div>
+
+          <div class="form-group full">
+            <label>Contact (phone or email)</label>
+            <input id="contact" type="text" placeholder="e.g. 02 9999 0000 or parts@myyard.com.au" required />
+          </div>
+
+        </div>
       </div>
 
-      <div class="form-grid" id="wreckerForm">
-
-        <div class="form-group">
-          <label>Car Make</label>
-          <select id="make" required>
-            <option value="">Select make</option>
-            <option value="Mazda">Mazda</option>
-            <option value="Toyota">Toyota</option>
-            <option value="Honda">Honda</option>
-          </select>
+      <!-- ── Parts Selector ── -->
+      <div class="parts-section">
+        <div class="parts-section-header">
+          <span class="parts-section-title">Available Parts — tick all that apply</span>
+          <div class="parts-actions">
+            <button class="parts-action-btn" onclick="selectAll()">Select All</button>
+            <button class="parts-action-btn" onclick="deselectAll()">Clear</button>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Car Model</label>
-          <select id="model" required>
-            <option value="">Select model</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Part Type</label>
-          <select id="part_type" required>
-            <option value="">Select part</option>
-            <option value="Door">Door</option>
-            <option value="Mirror">Mirror</option>
-            <option value="Bumper">Bumper</option>
-            <option value="Headlight">Headlight</option>
-            <option value="Taillight">Taillight</option>
-            <option value="Bonnet">Bonnet</option>
-            <option value="Boot Lid">Boot Lid</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Year</label>
-          <input id="year" type="number" placeholder="e.g. 2015" min="1980" max="2030" required />
-        </div>
-
-        <div class="form-group">
-          <label>Colour <span class="optional-tag">optional</span></label>
-          <input id="colour" type="text" placeholder="e.g. Silver" />
-        </div>
-
-        <div class="form-group">
-          <label>State</label>
-          <select id="state" required>
-            <option value="">Select state</option>
-            <option value="NSW">NSW</option>
-            <option value="VIC">VIC</option>
-            <option value="QLD">QLD</option>
-            <option value="SA">SA</option>
-            <option value="WA">WA</option>
-            <option value="TAS">TAS</option>
-            <option value="ACT">ACT</option>
-            <option value="NT">NT</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Suburb <span class="optional-tag">optional</span></label>
-          <input id="suburb" type="text" placeholder="e.g. Parramatta" />
-        </div>
-
-        <div class="form-group full">
-          <label>Business Name</label>
-          <input id="wrecker_name" type="text" placeholder="Your wrecker business name" required />
-        </div>
-
-        <div class="form-group full">
-          <label>Contact (phone or email)</label>
-          <input id="contact" type="text" placeholder="e.g. 02 9999 0000 or parts@myyard.com.au" required />
-        </div>
-
-        <div class="submit-row">
-          <button class="submit-btn" id="submitBtn" onclick="submitListing()">
-            Add Listing
-          </button>
-        </div>
-
-        <div class="msg" id="msg"></div>
-
+        <div id="partsChipsContainer"></div>
       </div>
+
+      <!-- ── Submit ── -->
+      <button class="submit-btn" id="submitBtn" onclick="submitListings()" disabled>
+        Select parts above
+      </button>
+
+      <div class="msg" id="msg"></div>
     </div>
 
-    <!-- My Listings -->
+    <!-- ── My Cars on Sale ── -->
     <div class="my-listings">
       <hr class="section-divider">
-      <h2 class="section-title">My Listings</h2>
-      <p class="section-sub">All parts you currently have listed. Delete any that are sold or no longer available.</p>
+      <div class="section-header">
+        <h2 class="section-title">My Cars on Sale</h2>
+        <span class="listing-count" id="listingCount"></span>
+      </div>
+      <p class="section-sub">Tap × on any part to remove it. Use "Remove Car" to delete all parts from a vehicle at once.</p>
 
-      <div class="listings-grid" id="myListingsGrid">
+      <div id="carsContainer">
         <div class="listings-loading" id="listingsLoading">
           <div class="spinner"></div>
           Loading your listings...
@@ -514,22 +655,83 @@
     &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
   </footer>
 
+  <script src="data.js"></script>
   <script src="../config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-
     let currentUser = null;
 
-    // ── Auth check: must be logged in as a wrecker ──
+    // ── Populate car dropdowns ──
+    populateMakeSelect(document.getElementById("make"), "Select make");
+    populateYearSelect(document.getElementById("year"), "Select year", false);
+
+    document.getElementById("make").addEventListener("change", function() {
+      populateModelSelect(document.getElementById("model"), this.value, "Select model");
+    });
+
+    // ── Build part chips ──
+    (function buildChips() {
+      const container = document.getElementById("partsChipsContainer");
+      Object.entries(QUICK_PARTS).forEach(([cat, parts]) => {
+        const catDiv = document.createElement("div");
+        catDiv.className = "parts-category";
+        catDiv.innerHTML = `<div class="parts-cat-label">${cat}</div>`;
+        const row = document.createElement("div");
+        row.className = "chips-row";
+        parts.forEach(part => {
+          const chip = document.createElement("div");
+          chip.className = "part-chip";
+          chip.dataset.part = part;
+          chip.textContent = part;
+          chip.addEventListener("click", () => toggleChip(chip));
+          row.appendChild(chip);
+        });
+        catDiv.appendChild(row);
+        container.appendChild(catDiv);
+      });
+    })();
+
+    function toggleChip(chip) {
+      chip.classList.toggle("selected");
+      updateSubmitBtn();
+    }
+
+    function selectAll() {
+      document.querySelectorAll(".part-chip").forEach(c => c.classList.add("selected"));
+      updateSubmitBtn();
+    }
+
+    function deselectAll() {
+      document.querySelectorAll(".part-chip").forEach(c => c.classList.remove("selected"));
+      updateSubmitBtn();
+    }
+
+    function selectedParts() {
+      return [...document.querySelectorAll(".part-chip.selected")].map(c => c.dataset.part);
+    }
+
+    function updateSubmitBtn() {
+      const btn = document.getElementById("submitBtn");
+      const count = selectedParts().length;
+      if (count === 0) {
+        btn.textContent = "Select parts above";
+        btn.disabled = true;
+      } else {
+        btn.textContent = `Add ${count} Listing${count !== 1 ? "s" : ""}`;
+        btn.disabled = false;
+      }
+    }
+
+    // ── Auth ──
     async function init() {
       const { data: { session } } = await db.auth.getSession();
-      if (!session) { window.location.href = 'login.html'; return; }
+      if (!session) { window.location.href = "login.html"; return; }
 
       const role = session.user.user_metadata?.role;
-      if (role !== 'wrecker') {
-        alert('This portal is for wreckers only. Redirecting you home.');
-        window.location.href = 'index.html';
+      if (role !== "wrecker") {
+        alert("This portal is for wreckers only.");
+        window.location.href = "index.html";
         return;
       }
 
@@ -541,79 +743,63 @@
 
     async function logout() {
       await db.auth.signOut();
-      window.location.href = 'home.html';
+      window.location.href = "home.html";
     }
 
-    const modelsByMake = {
-      Mazda:  ["Mazda 3", "Mazda 6", "CX-3"],
-      Toyota: ["Corolla", "Yaris"],
-      Honda:  ["Civic", "HR-V"]
-    };
-
-    document.getElementById("make").addEventListener("change", function() {
-      const make = this.value;
-      const modelEl = document.getElementById("model");
-      modelEl.innerHTML = '<option value="">Select model</option>';
-      if (!make) return;
-      modelsByMake[make].forEach(m => {
-        const opt = document.createElement("option");
-        opt.value = m;
-        opt.textContent = m;
-        modelEl.appendChild(opt);
-      });
-    });
-
-    async function submitListing() {
-      const msg = document.getElementById("msg");
-      const btn = document.getElementById("submitBtn");
-
+    // ── Submit listings ──
+    async function submitListings() {
       const make         = document.getElementById("make").value;
       const model        = document.getElementById("model").value;
-      const part_type    = document.getElementById("part_type").value;
       const year         = document.getElementById("year").value;
       const colour       = document.getElementById("colour").value.trim();
       const state        = document.getElementById("state").value;
       const suburb       = document.getElementById("suburb").value.trim();
       const wrecker_name = document.getElementById("wrecker_name").value.trim();
       const contact      = document.getElementById("contact").value.trim();
+      const parts        = selectedParts();
 
-      if (!make || !model || !part_type || !year || !state || !wrecker_name || !contact) {
-        showMsg("Please fill in all required fields.", "error");
+      if (!make || !model || !year || !state || !wrecker_name || !contact) {
+        showMsg("Please fill in all required car details first.", "error");
+        document.querySelector(".form-grid").scrollIntoView({ behavior: "smooth", block: "start" });
         return;
       }
 
+      if (parts.length === 0) {
+        showMsg("Please select at least one part.", "error");
+        return;
+      }
+
+      const btn = document.getElementById("submitBtn");
       btn.disabled = true;
       btn.textContent = "Adding...";
-      msg.style.display = "none";
+      document.getElementById("msg").style.display = "none";
 
-      const { error } = await db.from("inventory").insert([{
-        make, model, part_type,
+      const rows = parts.map(part => ({
+        make, model,
         year: parseInt(year),
         colour: colour || null,
         state,
         suburb: suburb || null,
         wrecker_name,
         contact,
-        user_id: currentUser.id
-      }]);
+        part_type: part,
+        user_id: currentUser.id,
+      }));
 
-      btn.disabled = false;
-      btn.textContent = "Add Listing";
+      const { error } = await db.from("inventory").insert(rows);
 
       if (error) {
-        showMsg("❌ Could not save listing. Please try again.", "error");
-        console.error(error);
+        showMsg("Could not save listings. Please try again.", "error");
+        btn.disabled = false;
+        updateSubmitBtn();
         return;
       }
 
-      showMsg("✅ Listing added! Customers searching for this part can now find you.", "success");
-      // Refresh listings
-      document.getElementById("myListingsGrid").innerHTML = '<div class="listings-loading"><div class="spinner"></div>Refreshing...</div>';
-      loadMyListings();
+      const carLabel = `${year} ${make} ${model}`;
+      showMsg(`✓ ${parts.length} listing${parts.length !== 1 ? "s" : ""} added for your ${carLabel}. Customers can now find you.`, "success");
 
-      ["make","model","part_type","year","colour","state","suburb","wrecker_name","contact"]
-        .forEach(id => { document.getElementById(id).value = ""; });
-      document.getElementById("model").innerHTML = '<option value="">Select model</option>';
+      deselectAll();
+      loadMyListings();
     }
 
     function showMsg(text, type) {
@@ -624,9 +810,11 @@
       el.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    // ── Load wrecker's own listings ──
+    // ── Load & group listings ──
     async function loadMyListings() {
-      const grid = document.getElementById("myListingsGrid");
+      const container = document.getElementById("carsContainer");
+      container.innerHTML = '<div class="listings-loading"><div class="spinner"></div>Loading...</div>';
+      document.getElementById("listingCount").textContent = "";
 
       const { data, error } = await db
         .from("inventory")
@@ -634,63 +822,177 @@
         .eq("user_id", currentUser.id)
         .order("created_at", { ascending: false });
 
-      document.getElementById("listingsLoading").remove();
+      container.innerHTML = "";
 
       if (error || !data || data.length === 0) {
-        grid.innerHTML = '<div class="listings-empty">No listings yet. Add your first one above.</div>';
+        container.innerHTML = '<div class="listings-empty">No listings yet. Add your first car above.</div>';
         return;
       }
 
-      data.forEach(row => addListingCard(row));
+      document.getElementById("listingCount").textContent =
+        `${data.length} part${data.length !== 1 ? "s" : ""} across ${groupListings(data).length} car${groupListings(data).length !== 1 ? "s" : ""}`;
+
+      const carList = document.createElement("div");
+      carList.className = "cars-list";
+
+      groupListings(data).forEach(group => {
+        carList.appendChild(buildCarCard(group));
+      });
+
+      container.appendChild(carList);
     }
 
-    function addListingCard(row) {
-      const grid = document.getElementById("myListingsGrid");
+    function groupListings(rows) {
+      const map = new Map();
+      rows.forEach(row => {
+        const key = [row.make, row.model, row.year, row.colour || "", row.state, row.suburb || "", row.wrecker_name, row.contact].join("||");
+        if (!map.has(key)) {
+          map.set(key, {
+            make: row.make, model: row.model, year: row.year,
+            colour: row.colour, state: row.state, suburb: row.suburb,
+            wrecker_name: row.wrecker_name, contact: row.contact,
+            parts: [],
+          });
+        }
+        map.get(key).parts.push({ id: row.id, part_type: row.part_type });
+      });
+      return Array.from(map.values());
+    }
 
-      // Remove empty state if present
-      const empty = grid.querySelector(".listings-empty");
-      if (empty) empty.remove();
-
+    function buildCarCard(group) {
       const card = document.createElement("div");
-      card.className = "listing-card";
-      card.id = "card-" + row.id;
+      card.className = "car-card";
+
+      const colourStr   = group.colour ? ` · ${group.colour}` : "";
+      const locationStr = [group.suburb, group.state].filter(Boolean).join(", ");
+
+      const allIds = group.parts.map(p => p.id);
+
       card.innerHTML = `
-        <div class="lc-part">${row.part_type ?? "—"}</div>
-        <div class="lc-car">${row.year ?? ""} ${row.make ?? ""} ${row.model ?? ""}</div>
-        <div class="lc-details">
-          ${row.colour ? `<div><span>Colour</span>${row.colour}</div>` : ""}
-          <div><span>Location</span>${row.suburb ? row.suburb + ", " : ""}${row.state ?? "—"}</div>
-          <div><span>Contact</span>${row.contact ?? "—"}</div>
+        <div class="cc-header">
+          <div>
+            <div class="cc-title">${group.year} ${group.make} ${group.model}</div>
+            <div class="cc-meta">${colourStr ? colourStr.slice(3) + " · " : ""}${locationStr} · ${group.wrecker_name} · ${group.contact}</div>
+          </div>
+          <button class="cc-remove-all" data-ids='${JSON.stringify(allIds)}' onclick="deleteAllParts(this)">Remove Car</button>
         </div>
-        <div class="lc-footer">
-          <button class="delete-btn" onclick="deleteListing(${row.id}, this)">Delete</button>
-        </div>
+        <div class="cc-parts" id="cc-parts-${allIds[0]}"></div>
+        <div class="cc-footer" id="cc-footer-${allIds[0]}">${group.parts.length} part${group.parts.length !== 1 ? "s" : ""} listed</div>
       `;
-      grid.appendChild(card);
+
+      const partsRow = card.querySelector(`#cc-parts-${allIds[0]}`);
+      const footer   = card.querySelector(`#cc-footer-${allIds[0]}`);
+
+      group.parts.forEach(p => {
+        const chip = document.createElement("span");
+        chip.className = "cc-part-chip" + (p.status === "sold" ? " sold" : "");
+        chip.id = `listed-${p.id}`;
+        chip.innerHTML = `
+          ${p.part_type}
+          <span class="sold-label">sold</span>
+          <button class="cc-sold-btn" title="${p.status === "sold" ? "Mark as Available" : "Mark as Sold"}" onclick="toggleSold(${p.id}, this)">✓</button>
+          <button class="cc-part-x" title="Remove" onclick="deletePart(${p.id}, this)">×</button>
+        `;
+        partsRow.appendChild(chip);
+      });
+
+      // Keep footer in sync via closure
+      card.__partsRow = partsRow;
+      card.__footer = footer;
+
+      return card;
     }
 
-    async function deleteListing(id, btn) {
-      if (!confirm("Delete this listing? This cannot be undone.")) return;
-
-      btn.textContent = "Deleting...";
+    async function deletePart(id, btn) {
+      btn.textContent = "…";
       btn.disabled = true;
 
       const { error } = await db.from("inventory").delete().eq("id", id);
+      if (error) { btn.textContent = "×"; btn.disabled = false; return; }
 
-      if (error) {
-        btn.textContent = "Delete";
-        btn.disabled = false;
-        alert("Could not delete. Please try again.");
+      const chip = document.getElementById(`listed-${id}`);
+      const partsRow = chip.closest(".cc-parts");
+      const card     = partsRow.closest(".car-card");
+      chip.remove();
+
+      const remaining = partsRow.querySelectorAll(".cc-part-chip").length;
+      if (remaining === 0) {
+        card.remove();
+      } else {
+        // Update footer and remove-all ids
+        card.querySelector(".cc-footer").textContent = `${remaining} part${remaining !== 1 ? "s" : ""} listed`;
+        const removeBtn = card.querySelector(".cc-remove-all");
+        const ids = JSON.parse(removeBtn.dataset.ids).filter(i => i !== id);
+        removeBtn.dataset.ids = JSON.stringify(ids);
+      }
+
+      refreshListingCount();
+    }
+
+    async function deleteAllParts(btn) {
+      const ids = JSON.parse(btn.dataset.ids);
+      const card = btn.closest(".car-card");
+      const partCount = ids.length;
+
+      if (!confirm(`Remove all ${partCount} part${partCount !== 1 ? "s" : ""} for this car? This cannot be undone.`)) return;
+
+      btn.textContent = "Removing…";
+      btn.disabled = true;
+
+      const { error } = await db.from("inventory").delete().in("id", ids);
+      if (error) { btn.textContent = "Remove Car"; btn.disabled = false; return; }
+
+      card.remove();
+      refreshListingCount();
+    }
+
+    function refreshListingCount() {
+      const allChips = document.querySelectorAll(".cc-part-chip");
+      const allCards = document.querySelectorAll(".car-card");
+      const container = document.getElementById("carsContainer");
+
+      if (allChips.length === 0) {
+        container.innerHTML = '<div class="listings-empty">No listings yet. Add your first car above.</div>';
+        document.getElementById("listingCount").textContent = "";
         return;
       }
 
-      document.getElementById("card-" + id).remove();
-
-      const grid = document.getElementById("myListingsGrid");
-      if (grid.children.length === 0) {
-        grid.innerHTML = '<div class="listings-empty">No listings yet. Add your first one above.</div>';
-      }
+      document.getElementById("listingCount").textContent =
+        `${allChips.length} part${allChips.length !== 1 ? "s" : ""} across ${allCards.length} car${allCards.length !== 1 ? "s" : ""}`;
     }
+
+    // ── Mark as Sold / Available ──
+    async function toggleSold(id, btn) {
+      const chip = document.getElementById(`listed-${id}`);
+      const isSold = chip.classList.contains("sold");
+      const newStatus = isSold ? "available" : "sold";
+
+      btn.disabled = true;
+      btn.textContent = "…";
+
+      const { error } = await db
+        .from("inventory")
+        .update({ status: newStatus })
+        .eq("id", id);
+
+      if (error) {
+        btn.textContent = "✓";
+        btn.disabled = false;
+        return;
+      }
+
+      if (newStatus === "sold") {
+        chip.classList.add("sold");
+        btn.title = "Mark as Available";
+      } else {
+        chip.classList.remove("sold");
+        btn.title = "Mark as Sold";
+      }
+
+      btn.textContent = "✓";
+      btn.disabled = false;
+    }
+
   </script>
 </body>
 </html>
