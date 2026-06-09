@@ -3,308 +3,519 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PartsFinder — Find Car Parts From Wreckers</title>
+  <title>PartsFinder — Australia's Car Parts Marketplace</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
     :root {
       --black: #0a0a0a;
       --white: #f5f2ee;
       --accent: #e8431a;
+      --accent2: #f5a623;
       --mid: #888;
       --border: #d0cbc4;
-      --card-bg: #faf8f5;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body { height: 100%; }
+
     body {
       font-family: 'Barlow', sans-serif;
-      background: var(--white);
-      color: var(--black);
+      background: var(--black);
+      color: var(--white);
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Noise texture overlay ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.4;
     }
 
     /* ── Header ── */
     header {
+      position: relative;
+      z-index: 10;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 18px 40px;
-      border-bottom: 2px solid var(--black);
-      background: var(--white);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      padding: 22px 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
     }
 
     .logo {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 26px;
-      font-weight: 800;
+      font-size: 28px;
+      font-weight: 900;
       letter-spacing: -0.5px;
       text-decoration: none;
-      color: var(--black);
+      color: var(--white);
     }
 
     .logo span { color: var(--accent); }
 
-    header nav { display: flex; gap: 10px; align-items: center; }
-
-    header nav a {
+    .header-tag {
       font-family: 'Barlow Condensed', sans-serif;
+      font-size: 12px;
       font-weight: 600;
-      font-size: 15px;
-      letter-spacing: 0.5px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      text-decoration: none;
-      color: var(--black);
-      border: 2px solid var(--black);
-      padding: 8px 18px;
-      transition: background 0.15s, color 0.15s;
-    }
-
-    header nav a:hover {
-      background: var(--black);
-      color: var(--white);
+      color: rgba(255,255,255,0.35);
     }
 
     /* ── Hero ── */
     .hero {
-      padding: 70px 40px 50px;
-      max-width: 860px;
-      margin: 0 auto;
+      position: relative;
+      z-index: 10;
       text-align: center;
+      padding: 90px 40px 60px;
     }
 
     .hero-eyebrow {
+      display: inline-block;
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 14px;
+      border: 1px solid rgba(232,67,26,0.4);
+      padding: 5px 14px;
+      border-radius: 2px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease both;
     }
 
     .hero h1 {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(48px, 8vw, 86px);
-      font-weight: 800;
-      line-height: 0.95;
-      letter-spacing: -1px;
+      font-size: clamp(60px, 11vw, 130px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -2px;
       text-transform: uppercase;
-      margin-bottom: 22px;
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s ease 0.1s both;
     }
 
-    .hero p {
+    .hero h1 em {
+      font-style: normal;
+      color: var(--accent);
+      display: block;
+    }
+
+    .hero-sub {
       font-size: 18px;
-      color: #555;
+      color: rgba(245,242,238,0.6);
       max-width: 480px;
-      margin: 0 auto 40px;
-      line-height: 1.6;
+      margin: 0 auto 60px;
+      line-height: 1.7;
+      animation: fadeUp 0.6s ease 0.2s both;
     }
 
-    /* ── Search Form ── */
-    .search-card {
-      background: var(--black);
-      border-radius: 2px;
-      padding: 32px 36px 36px;
-      max-width: 820px;
-      margin: 0 auto;
+    /* ── Stats bar ── */
+    .stats-bar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      max-width: 660px;
+      margin: 0 auto 60px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 3px;
+      overflow: hidden;
+      animation: fadeUp 0.6s ease 0.25s both;
     }
 
-    .search-card-label {
+    .stat-item {
+      flex: 1;
+      text-align: center;
+      padding: 18px 20px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .stat-item:last-child { border-right: none; }
+
+    .stat-value {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+    }
+
+    /* ── Choice cards ── */
+    .choices {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 40px;
+      position: relative;
+      z-index: 10;
+      animation: fadeUp 0.6s ease 0.3s both;
+    }
+
+    .choice-card {
+      width: 320px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+      padding: 40px 36px;
+      text-decoration: none;
+      color: var(--white);
+      text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .choice-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .choice-card.customer::before {
+      background: linear-gradient(135deg, rgba(232,67,26,0.08) 0%, transparent 60%);
+    }
+
+    .choice-card.wrecker::before {
+      background: linear-gradient(135deg, rgba(245,166,35,0.08) 0%, transparent 60%);
+    }
+
+    .choice-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(255,255,255,0.3);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .choice-card:hover::before { opacity: 1; }
+
+    .card-icon { font-size: 40px; margin-bottom: 20px; display: block; }
+
+    .card-label {
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 2.5px;
       text-transform: uppercase;
-      color: rgba(255,255,255,0.35);
-      margin-bottom: 16px;
+      margin-bottom: 8px;
     }
 
-    .search-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
+    .choice-card.customer .card-label { color: var(--accent); }
+    .choice-card.wrecker .card-label  { color: var(--accent2); }
 
-    .search-grid select {
-      width: 100%;
-      padding: 13px 14px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 14px;
-      background: #1a1a1a;
-      color: var(--white);
-      border: 1px solid #333;
-      border-radius: 2px;
-      appearance: none;
-      cursor: pointer;
-      outline: none;
-      transition: border-color 0.15s;
-    }
-
-    .search-grid select:focus { border-color: var(--accent); }
-    .search-grid option, .search-grid optgroup { background: #1a1a1a; }
-
-    .search-btn {
-      width: 100%;
-      padding: 15px;
+    .card-title {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 18px;
+      font-size: 34px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+      line-height: 1;
+      margin-bottom: 14px;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: rgba(245,242,238,0.55);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 14px;
       font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      background: var(--accent);
-      color: var(--white);
-      border: none;
+      padding: 10px 20px;
       border-radius: 2px;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.1s;
+      transition: gap 0.15s;
     }
 
-    .search-btn:hover { background: #c93615; }
-    .search-btn:active { transform: scale(0.99); }
-    .search-btn:disabled { background: #444; cursor: not-allowed; }
+    .choice-card:hover .card-cta { gap: 12px; }
 
-    /* ── Results ── */
-    .results-section {
-      max-width: 1100px;
-      margin: 60px auto;
-      padding: 0 40px;
-      display: none;
+    .choice-card.customer .card-cta { background: var(--accent); color: var(--white); }
+    .choice-card.wrecker  .card-cta { background: var(--accent2); color: var(--black); }
+
+    /* ── How it works strip ── */
+    .how-strip {
+      position: relative;
+      z-index: 10;
+      margin: 80px auto 0;
+      max-width: 900px;
+      padding: 0 40px 0;
     }
 
-    .results-header {
-      display: flex;
-      align-items: baseline;
-      gap: 16px;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 2px solid var(--black);
-    }
-
-    .results-header h2 {
+    .strip-label {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 32px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
       text-transform: uppercase;
+      color: rgba(255,255,255,0.25);
+      text-align: center;
+      margin-bottom: 32px;
     }
 
-    .result-count {
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+
+    .step {
+      background: rgba(255,255,255,0.03);
+      padding: 28px 26px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .step-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 48px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.06);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+
+    .step-desc {
+      font-size: 13px;
+      color: rgba(245,242,238,0.45);
+      line-height: 1.6;
+    }
+
+    /* ── Wrecker pitch section ── */
+    .wrecker-pitch {
+      position: relative;
+      z-index: 10;
+      margin: 100px auto 0;
+      max-width: 900px;
+      padding: 0 40px;
+    }
+
+    .pitch-header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 40px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      flex-wrap: wrap;
+    }
+
+    .pitch-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+
+    .pitch-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -1px;
+      line-height: 0.95;
+    }
+
+    .pitch-cta {
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       font-family: 'Barlow Condensed', sans-serif;
       font-size: 15px;
-      font-weight: 600;
-      color: var(--mid);
-      letter-spacing: 0.5px;
-    }
-
-    /* Table */
-    .results-table-wrap { overflow-x: auto; }
-
-    table { width: 100%; border-collapse: collapse; }
-
-    thead tr { background: var(--black); }
-
-    thead th {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
+      font-weight: 700;
       letter-spacing: 1.5px;
       text-transform: uppercase;
-      color: var(--white);
-      padding: 13px 16px;
-      text-align: left;
+      text-decoration: none;
+      background: var(--accent2);
+      color: var(--black);
+      padding: 13px 28px;
+      border-radius: 2px;
+      transition: background 0.15s, gap 0.15s;
       white-space: nowrap;
     }
 
-    tbody tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.1s;
+    .pitch-cta:hover { background: #d4901e; gap: 12px; }
+
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
     }
 
-    tbody tr:hover { background: #eeeae4; }
-
-    tbody td {
-      padding: 13px 16px;
-      font-size: 14px;
-      vertical-align: middle;
+    .benefit {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      padding: 28px 28px 26px;
+      transition: background 0.15s;
     }
 
-    .contact-link {
+    .benefit:hover { background: rgba(255,255,255,0.05); }
+
+    .benefit-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .benefit-title {
       font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 600;
+      font-size: 20px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+      margin-bottom: 8px;
+    }
+
+    .benefit-desc {
+      font-size: 14px;
+      color: rgba(245,242,238,0.5);
+      line-height: 1.6;
+    }
+
+    /* ── Makes strip ── */
+    .makes-strip {
+      position: relative;
+      z-index: 10;
+      margin: 80px auto 0;
+      max-width: 900px;
+      padding: 0 40px;
+    }
+
+    .makes-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.2);
+      margin-bottom: 20px;
+    }
+
+    .makes-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .make-chip {
+      font-family: 'Barlow Condensed', sans-serif;
       font-size: 13px;
+      font-weight: 600;
       letter-spacing: 0.5px;
-      color: var(--accent);
-      text-decoration: none;
-      border: 1.5px solid var(--accent);
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      border: 1px solid rgba(255,255,255,0.1);
       padding: 5px 12px;
       border-radius: 2px;
-      white-space: nowrap;
-      transition: background 0.15s, color 0.15s;
+      text-decoration: none;
+      transition: color 0.15s, border-color 0.15s;
     }
 
-    .contact-link:hover { background: var(--accent); color: var(--white); }
-
-    .colour-chip { display: inline-flex; align-items: center; gap: 7px; }
-    .colour-dot { width: 11px; height: 11px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); flex-shrink: 0; }
-
-    /* States */
-    .no-results {
-      text-align: center;
-      padding: 60px 20px;
-      border: 2px dashed var(--border);
-      border-radius: 2px;
-      display: none;
-    }
-
-    .no-results .icon { font-size: 40px; margin-bottom: 12px; }
-    .no-results p { color: var(--mid); font-size: 16px; }
-
-    .loading-state {
-      text-align: center;
-      padding: 60px 20px;
-      display: none;
-    }
-
-    .spinner {
-      width: 36px;
-      height: 36px;
-      border: 3px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      margin: 0 auto 16px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .make-chip:hover { color: var(--white); border-color: rgba(255,255,255,0.35); }
 
     /* ── Footer ── */
     footer {
-      text-align: center;
-      padding: 40px;
-      border-top: 2px solid var(--black);
+      position: relative;
+      z-index: 10;
+      margin-top: 80px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 32px 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .footer-copy {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 0.5px;
-      color: var(--mid);
+      color: rgba(255,255,255,0.2);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .footer-links a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: rgba(255,255,255,0.25);
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: rgba(255,255,255,0.7); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
     /* ── Responsive ── */
-    @media (max-width: 760px) {
-      header { padding: 14px 20px; }
-      .hero { padding: 50px 20px 36px; }
-      .search-card { padding: 22px 18px 26px; }
-      .search-grid { grid-template-columns: 1fr 1fr; }
-      .results-section { padding: 0 20px; }
-    }
-
-    @media (max-width: 480px) {
-      .search-grid { grid-template-columns: 1fr; }
+    @media (max-width: 700px) {
+      header { padding: 18px 24px; }
+      .hero { padding: 60px 24px 40px; }
+      .stats-bar { flex-direction: column; margin-bottom: 40px; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
+      .stat-item:last-child { border-bottom: none; }
+      .choices { padding: 0 24px; flex-direction: column; align-items: center; }
+      .choice-card { width: 100%; max-width: 360px; }
+      .steps { grid-template-columns: 1fr; }
+      .how-strip, .wrecker-pitch, .makes-strip { padding: 0 24px; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .pitch-header { flex-direction: column; align-items: flex-start; }
+      footer { padding: 28px 24px; flex-direction: column; align-items: flex-start; }
     }
   </style>
 </head>
@@ -312,321 +523,162 @@
 <body>
 
   <header>
-    <a class="logo" href="home.html">Parts<span>Finder</span></a>
-    <nav id="headerNav">
-      <a href="login.html">Log In</a>
-    </nav>
+    <a class="logo" href="search.html">Parts<span>Finder</span></a>
+    <span class="header-tag">Australia's Wrecker Marketplace</span>
   </header>
 
   <main>
     <section class="hero">
-      <p class="hero-eyebrow">Australia's Car Wreckers Marketplace</p>
-      <h1>Find the Part.<br>Skip the Calls.</h1>
-      <p>Search real-time inventory from wreckers across Australia. No more ringing around.</p>
+      <span class="hero-eyebrow">🇦🇺 Australia-wide</span>
+      <h1>Find the part.<br><em>Skip the calls.</em></h1>
+      <p class="hero-sub">
+        Real-time car parts from wreckers across Australia. No more ringing around. No middleman.
+      </p>
 
-      <div class="search-card">
-        <p class="search-card-label">Search inventory</p>
-        <div class="search-grid">
-          <select id="makeSelect"></select>
-          <select id="modelSelect"></select>
-          <select id="partSelect"></select>
-          <select id="yearFromSelect"></select>
-          <select id="yearToSelect"></select>
-          <select id="stateSelect">
-            <option value="">— State —</option>
-            <option value="NSW">NSW</option>
-            <option value="VIC">VIC</option>
-            <option value="QLD">QLD</option>
-            <option value="SA">SA</option>
-            <option value="WA">WA</option>
-            <option value="TAS">TAS</option>
-            <option value="ACT">ACT</option>
-            <option value="NT">NT</option>
-          </select>
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value">25+</div>
+          <div class="stat-label">Makes Covered</div>
         </div>
-
-        <p id="searchValidMsg" style="display:none;color:#ff7a5c;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;letter-spacing:0.5px;margin-bottom:10px;text-align:left;"></p>
-
-        <button class="search-btn" id="searchBtn" onclick="doSearch()">
-          Search Parts
-        </button>
+        <div class="stat-item">
+          <div class="stat-value">80+</div>
+          <div class="stat-label">Part Categories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">All 8</div>
+          <div class="stat-label">States & Territories</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value">Free</div>
+          <div class="stat-label">To List</div>
+        </div>
       </div>
     </section>
 
-    <!-- Results -->
-    <section class="results-section" id="resultsSection">
-      <div class="results-header">
-        <h2>Results</h2>
-        <span class="result-count" id="resultCount"></span>
+    <!-- Choice cards -->
+    <div class="choices">
+
+      <a class="choice-card customer" href="search.html">
+        <span class="card-icon">🔍</span>
+        <div class="card-label">For Car Owners</div>
+        <div class="card-title">Find a Part</div>
+        <p class="card-desc">
+          Search by make, model, part type and state. See which wreckers have it and contact them directly.
+        </p>
+        <span class="card-cta">Search Now →</span>
+      </a>
+
+      <a class="choice-card wrecker" href="login.html">
+        <span class="card-icon">🔧</span>
+        <div class="card-label">For Wreckers</div>
+        <div class="card-title">List a Part</div>
+        <p class="card-desc">
+          Add parts you have in stock. Customers searching for that exact part in your state will find you directly.
+        </p>
+        <span class="card-cta">Add Listing →</span>
+      </a>
+
+    </div>
+
+    <!-- How it works -->
+    <div class="how-strip">
+      <p class="strip-label">How it works — buyers</p>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-title">Search your part</div>
+          <p class="step-desc">Select make, model, part type and state. Filter by year. Takes 10 seconds.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-title">See who has it</div>
+          <p class="step-desc">Results show wreckers with that exact part in stock, including colour and year.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-title">Contact directly</div>
+          <p class="step-desc">Call or email the wrecker straight from the listing. No middleman, no fees.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wrecker pitch -->
+    <div class="wrecker-pitch">
+      <div class="pitch-header">
+        <div>
+          <p class="pitch-eyebrow">For Wrecking Businesses</p>
+          <h2 class="pitch-title">Reach more<br>customers.</h2>
+        </div>
+        <a class="pitch-cta" href="login.html">Start Listing Free →</a>
       </div>
 
-      <div class="loading-state" id="loadingState">
-        <div class="spinner"></div>
-        <p>Searching inventory...</p>
+      <div class="benefits-grid">
+        <div class="benefit">
+          <span class="benefit-icon">💸</span>
+          <div class="benefit-title">Completely Free</div>
+          <p class="benefit-desc">No subscription costs, no commission on sales, no listing fees. Add as many parts as you have in stock at zero cost.</p>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">📍</span>
+          <div class="benefit-title">Get Found by Locals</div>
+          <p class="benefit-desc">Buyers filter by state. When someone nearby searches for exactly what you have, your listing shows up at the top.</p>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">📞</span>
+          <div class="benefit-title">Direct Contact Only</div>
+          <p class="benefit-desc">Your phone number or email goes straight on the listing. Buyers contact you directly — no platform middleman taking a cut.</p>
+        </div>
+        <div class="benefit">
+          <span class="benefit-icon">⚡</span>
+          <div class="benefit-title">Manage in Seconds</div>
+          <p class="benefit-desc">Add a listing in under a minute. Edit details or mark a part as sold instantly from any device, any time.</p>
+        </div>
       </div>
+    </div>
 
-      <div class="no-results" id="noResults">
-        <div class="icon">🔍</div>
-        <p id="noResultsMsg">No listings matched your search. Try broadening your filters.</p>
+    <!-- Popular makes strip -->
+    <div class="makes-strip">
+      <p class="makes-label">Supported makes</p>
+      <div class="makes-list">
+        <a class="make-chip" href="search.html">Toyota</a>
+        <a class="make-chip" href="search.html">Mazda</a>
+        <a class="make-chip" href="search.html">Ford</a>
+        <a class="make-chip" href="search.html">Holden</a>
+        <a class="make-chip" href="search.html">Hyundai</a>
+        <a class="make-chip" href="search.html">Kia</a>
+        <a class="make-chip" href="search.html">Nissan</a>
+        <a class="make-chip" href="search.html">Mitsubishi</a>
+        <a class="make-chip" href="search.html">Subaru</a>
+        <a class="make-chip" href="search.html">Honda</a>
+        <a class="make-chip" href="search.html">Volkswagen</a>
+        <a class="make-chip" href="search.html">BMW</a>
+        <a class="make-chip" href="search.html">Mercedes-Benz</a>
+        <a class="make-chip" href="search.html">Audi</a>
+        <a class="make-chip" href="search.html">Suzuki</a>
+        <a class="make-chip" href="search.html">Lexus</a>
+        <a class="make-chip" href="search.html">Isuzu</a>
+        <a class="make-chip" href="search.html">Land Rover</a>
+        <a class="make-chip" href="search.html">Jeep</a>
+        <a class="make-chip" href="search.html">Skoda</a>
+        <a class="make-chip" href="search.html">Volvo</a>
+        <a class="make-chip" href="search.html">Renault</a>
+        <a class="make-chip" href="search.html">LDV</a>
+        <a class="make-chip" href="search.html">MG</a>
+        <a class="make-chip" href="search.html">Great Wall</a>
       </div>
+    </div>
 
-      <div class="results-table-wrap" id="tableWrap" style="display:none">
-        <table>
-          <thead>
-            <tr>
-              <th>Make</th>
-              <th>Model</th>
-              <th>Part</th>
-              <th>Year</th>
-              <th>Colour</th>
-              <th>Location</th>
-              <th>Wrecker</th>
-              <th>Contact</th>
-              <th id="saveColHeader" style="display:none">Save</th>
-            </tr>
-          </thead>
-          <tbody id="resultsBody"></tbody>
-        </table>
-      </div>
-    </section>
   </main>
 
   <footer>
-    &copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia
+    <span class="footer-copy">&copy; 2025 PartsFinder &nbsp;·&nbsp; Connecting buyers with wreckers across Australia</span>
+    <nav class="footer-links">
+      <a href="search.html">Search Parts</a>
+      <a href="login.html">List a Part</a>
+      <a href="login.html">Log In</a>
+    </nav>
   </footer>
 
-  <script src="config.js"></script>
-  <script src="data.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-
-    let currentUser = null;
-    let savedIds = new Set();
-
-    // ── Populate dropdowns ──
-    populateMakeSelect(document.getElementById("makeSelect"));
-    populateQuickPartSelect(document.getElementById("partSelect"));
-    populateYearSelect(document.getElementById("yearFromSelect"), "— Year From —");
-    populateYearSelect(document.getElementById("yearToSelect"),   "— Year To —");
-
-    document.getElementById("makeSelect").addEventListener("change", function() {
-      populateModelSelect(document.getElementById("modelSelect"), this.value);
-      this.style.borderColor = "";
-      document.getElementById("modelSelect").style.borderColor = "";
-    });
-    populateModelSelect(document.getElementById("modelSelect"), "");
-
-    ["modelSelect", "partSelect"].forEach(id => {
-      document.getElementById(id).addEventListener("change", function() {
-        this.style.borderColor = "";
-        if (!document.querySelector(".search-grid select[style*='ff7a5c']")) {
-          document.getElementById("searchValidMsg").style.display = "none";
-        }
-      });
-    });
-
-    // ── Auth state ──
-    async function init() {
-      const { data: { session } } = await db.auth.getSession();
-      const nav = document.getElementById("headerNav");
-
-      if (session) {
-        currentUser = session.user;
-        const role = session.user.user_metadata?.role;
-
-        const { data: saved } = await db
-          .from("saved_listings")
-          .select("listing_id")
-          .eq("user_id", currentUser.id);
-        if (saved) saved.forEach(r => savedIds.add(r.listing_id));
-
-        if (role === "wrecker") {
-          nav.innerHTML = `
-            <a href="wrecker.html">My Portal</a>
-            <a href="#" onclick="logout(); return false;">Log Out</a>`;
-        } else {
-          nav.innerHTML = `
-            <a href="account.html">Saved Parts</a>
-            <a href="#" onclick="logout(); return false;">Log Out</a>`;
-        }
-
-        document.getElementById("saveColHeader").style.display = "";
-      } else {
-        nav.innerHTML = `<a href="login.html">Log In</a>`;
-      }
-    }
-
-    async function logout() {
-      await db.auth.signOut();
-      window.location.reload();
-    }
-
-    init();
-
-    // ── Colour chip ──
-    const colourMap = {
-      white:"#fff", black:"#111", silver:"#c0c0c0", grey:"#888", gray:"#888",
-      red:"#d32f2f", blue:"#1565c0", green:"#2e7d32", yellow:"#f9a825",
-      orange:"#e65100", brown:"#5d4037", gold:"#c6a819", purple:"#6a1b9a",
-      pink:"#e91e8c", cream:"#f5e6c8", champagne:"#f7e7ce", beige:"#f0e4c8",
-      bronze:"#8c6239", maroon:"#880000", navy:"#001f5b", teal:"#00695c",
-    };
-
-    function cssColour(str) {
-      if (!str) return null;
-      const key = str.toLowerCase().trim();
-      for (const [k, v] of Object.entries(colourMap)) {
-        if (key.includes(k)) return v;
-      }
-      return "#ccc";
-    }
-
-    // ── Search ──
-    async function doSearch() {
-      const make      = document.getElementById("makeSelect").value;
-      const model     = document.getElementById("modelSelect").value;
-      const part      = document.getElementById("partSelect").value;
-      const yearFrom  = document.getElementById("yearFromSelect").value;
-      const yearTo    = document.getElementById("yearToSelect").value;
-      const state     = document.getElementById("stateSelect").value;
-
-      // Required field validation
-      const requiredMap = { makeSelect: make, modelSelect: model, partSelect: part };
-      const missing = Object.entries(requiredMap).filter(([, v]) => !v);
-      const validMsg = document.getElementById("searchValidMsg");
-
-      document.querySelectorAll(".search-grid select").forEach(el => {
-        el.style.borderColor = "";
-      });
-
-      if (missing.length > 0) {
-        missing.forEach(([id]) => {
-          document.getElementById(id).style.borderColor = "#ff7a5c";
-        });
-        const labels = { makeSelect: "Make", modelSelect: "Model", partSelect: "Part Type" };
-        const names = missing.map(([id]) => labels[id]).join(", ");
-        validMsg.textContent = `Please select a ${names} before searching.`;
-        validMsg.style.display = "block";
-        return;
-      }
-
-      validMsg.style.display = "none";
-
-      const section   = document.getElementById("resultsSection");
-      const loadingEl = document.getElementById("loadingState");
-      const noResEl   = document.getElementById("noResults");
-      const tableWrap = document.getElementById("tableWrap");
-      const body      = document.getElementById("resultsBody");
-      const countEl   = document.getElementById("resultCount");
-
-      section.style.display = "block";
-      loadingEl.style.display = "block";
-      noResEl.style.display = "none";
-      tableWrap.style.display = "none";
-      body.innerHTML = "";
-      countEl.textContent = "";
-
-      let query = db.from("inventory").select("*");
-      if (make)     query = query.eq("make", make);
-      if (model)    query = query.eq("model", model);
-      if (part)     query = query.eq("part_type", part);
-      if (state)    query = query.eq("state", state);
-      if (yearFrom) query = query.gte("year", parseInt(yearFrom));
-      if (yearTo)   query = query.lte("year", parseInt(yearTo));
-      query = query.eq("status", "available");  // hide sold parts
-      query = query.order("created_at", { ascending: false });
-
-      const { data, error } = await query;
-      loadingEl.style.display = "none";
-
-      if (error) {
-        noResEl.style.display = "block";
-        document.getElementById("noResultsMsg").textContent = "Something went wrong. Please try again.";
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        noResEl.style.display = "block";
-        document.getElementById("noResultsMsg").textContent =
-          "No listings matched your search. Try broadening your filters.";
-        return;
-      }
-
-      countEl.textContent = `${data.length} listing${data.length !== 1 ? "s" : ""} found`;
-      tableWrap.style.display = "block";
-
-      const showSave = currentUser && currentUser.user_metadata?.role !== "wrecker";
-      document.getElementById("saveColHeader").style.display = showSave ? "" : "none";
-
-      data.forEach(row => {
-        const dot = row.colour ? cssColour(row.colour) : null;
-        const alreadySaved = savedIds.has(row.id);
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${row.make ?? "—"}</td>
-          <td>${row.model ?? "—"}</td>
-          <td>${row.part_type ?? "—"}</td>
-          <td>${row.year ?? "—"}</td>
-          <td>${dot
-            ? `<span class="colour-chip"><span class="colour-dot" style="background:${dot}"></span>${row.colour}</span>`
-            : (row.colour || "—")}</td>
-          <td>${row.suburb ? row.suburb + ", " : ""}${row.state ?? "—"}</td>
-          <td>${row.wrecker_name ?? "—"}</td>
-          <td><a class="contact-link" href="${formatContact(row.contact)}">${row.contact ?? "—"}</a></td>
-          ${showSave ? `<td>
-            <button
-              id="save-${row.id}"
-              onclick="toggleSave(${row.id}, this)"
-              title="${alreadySaved ? "Remove from saved" : "Save this listing"}"
-              style="background:none;border:none;cursor:pointer;font-size:20px;padding:2px 6px;opacity:${alreadySaved ? 1 : 0.3};transition:opacity 0.15s,transform 0.15s"
-              onmouseover="this.style.opacity=1;this.style.transform='scale(1.2)'"
-              onmouseout="this.style.opacity=${alreadySaved ? 1 : 0.3};this.style.transform='scale(1)'"
-            >🔖</button>
-          </td>` : ""}
-        `;
-        body.appendChild(tr);
-      });
-
-      section.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-
-    // ── Save / unsave ──
-    async function toggleSave(listingId, btn) {
-      if (!currentUser) { window.location.href = "login.html"; return; }
-
-      const alreadySaved = savedIds.has(listingId);
-      btn.style.opacity = "0.5";
-
-      if (alreadySaved) {
-        const { error } = await db
-          .from("saved_listings")
-          .delete()
-          .eq("user_id", currentUser.id)
-          .eq("listing_id", listingId);
-        if (!error) {
-          savedIds.delete(listingId);
-          btn.style.opacity = "0.3";
-          btn.onmouseout = () => { btn.style.opacity = "0.3"; btn.style.transform = "scale(1)"; };
-        }
-      } else {
-        const { error } = await db
-          .from("saved_listings")
-          .insert([{ user_id: currentUser.id, listing_id: listingId }]);
-        if (!error) {
-          savedIds.add(listingId);
-          btn.style.opacity = "1";
-          btn.onmouseout = () => { btn.style.opacity = "1"; btn.style.transform = "scale(1)"; };
-        }
-      }
-    }
-
-    function formatContact(contact) {
-      if (!contact) return "#";
-      if (contact.includes("@")) return `mailto:${contact}`;
-      if (/^\d/.test(contact.replace(/\s/g, ""))) return `tel:${contact.replace(/\s/g, "")}`;
-      return "#";
-    }
-  </script>
 </body>
 </html>

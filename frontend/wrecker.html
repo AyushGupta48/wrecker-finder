@@ -537,9 +537,9 @@
 <body>
 
   <header>
-    <a class="logo" href="home.html">Parts<span>Finder</span></a>
+    <a class="logo" href="index.html">Parts<span>Finder</span></a>
     <nav>
-      <a href="index.html">Find Parts</a>
+      <a href="search.html">Find Parts</a>
       <a href="#" onclick="logout(); return false;">Log Out</a>
     </nav>
   </header>
@@ -731,7 +731,7 @@
       const role = session.user.user_metadata?.role;
       if (role !== "wrecker") {
         alert("This portal is for wreckers only.");
-        window.location.href = "index.html";
+        window.location.href = "search.html";
         return;
       }
 
@@ -743,7 +743,7 @@
 
     async function logout() {
       await db.auth.signOut();
-      window.location.href = "home.html";
+      window.location.href = "index.html";
     }
 
     // ── Submit listings ──

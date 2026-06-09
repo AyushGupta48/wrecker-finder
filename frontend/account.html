@@ -266,10 +266,10 @@
 <body>
 
   <header>
-    <a class="logo" href="home.html">Parts<span>Finder</span></a>
+    <a class="logo" href="index.html">Parts<span>Finder</span></a>
     <div class="header-right">
       <span class="user-email" id="userEmail"></span>
-      <a class="btn-outline" href="index.html">Search Parts</a>
+      <a class="btn-outline" href="search.html">Search Parts</a>
       <button class="btn-outline" onclick="logout()">Log Out</button>
     </div>
   </header>
@@ -290,7 +290,7 @@
       <div class="state-box" id="emptyState" style="display:none">
         <div class="icon">🔖</div>
         <p>You haven't saved any listings yet.</p>
-        <a class="search-btn-link" href="index.html">Search for Parts</a>
+        <a class="search-btn-link" href="search.html">Search for Parts</a>
       </div>
 
       <!-- Cards -->
@@ -367,7 +367,7 @@
 
     async function logout() {
       await db.auth.signOut();
-      window.location.href = 'home.html';
+      window.location.href = 'index.html';
     }
 
     function formatContact(contact) {
