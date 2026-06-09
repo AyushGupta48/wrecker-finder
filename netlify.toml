@@ -3,4 +3,4 @@
   publish = "frontend"
 
 [build.environment]
-  SECRETS_SCAN_OMIT_PATHS = "frontend/config.js"
+  SECRETS_SCAN_OMIT_KEYS = "SUPABASE_ANON,SUPABASE_URL"
